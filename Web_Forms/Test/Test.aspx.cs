@@ -24,15 +24,17 @@ public partial class Test : System.Web.UI.Page
         //    show_content.Controls.Add(br);
         //}
 
-        List<Users> list_users = DatabaseFunctions.getUsers(ConnectionString);
-        foreach (Users user in list_users)
-        {
-            Label continut_users = new Label();
-            HtmlGenericControl br = new HtmlGenericControl("br");
-            continut_users.Text = user.toString();
-            show_content.Controls.Add(continut_users);
-            show_content.Controls.Add(br);
-        }
-
+        //List<User> list_users = DatabaseFunctions.getUsers(ConnectionString);
+        //foreach (User user in list_users)
+        //{
+        //    Label continut_users = new Label();
+        //    HtmlGenericControl br = new HtmlGenericControl("br");
+        //    continut_users.Text = user.toString();
+        //    show_content.Controls.Add(continut_users);
+        //    show_content.Controls.Add(br);
+        //}
+        Label id_specific = new Label();
+        id_specific.Text = DatabaseFunctions.getSpecificId("Italian",ConnectionString)+"";
+        show_content.Controls.Add(id_specific);
     }
 }

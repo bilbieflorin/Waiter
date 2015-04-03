@@ -12,10 +12,10 @@
         </div>
         <div class="form-group" id="commentsformgroup" runat="server">
             <label class="control-label">Mesajul dumneavoastra</label>
-            <asp:TextBox runat="server" CssClass="form-control" ID="CommentsTextBox" placeholder="Introduceti mesajul" TextMode="MultiLine" Rows="10" Text=""/>
-            <asp:CustomValidator ID="Comments" runat="server"  ErrorMessage="Mesajul trebuie sa contina minim 10 caractere!" ForeColor="Red" Display="Dynamic"  ControlToValidate="CommentsTextBox" OnServerValidate="commentsServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
+            <asp:TextBox runat="server" CssClass="form-control" ID="MessageTextBox" placeholder="Introduceti mesajul" TextMode="MultiLine" Rows="10" Text=""/>
+            <asp:CustomValidator ID="Comments" runat="server"  ErrorMessage="Mesajul trebuie sa contina minim 10 caractere!" ForeColor="Red" Display="Dynamic"  ControlToValidate="MessageTextBox" OnServerValidate="commentsServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
         </div>
-        <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Trimite"></asp:Button>
+        <asp:Button ID="SendButton" CssClass="btn btn-primary" OnClick="sendButtonClick" runat="server" Text="Trimite"></asp:Button>
     </div>
 </asp:Content>
 

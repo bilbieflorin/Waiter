@@ -78,17 +78,17 @@ namespace db_mapping
             return lista_preparate;
         }
 
-        public static List<Users> getUsers(string connection_string)
+        public static List<User> getUsers(string connection_string)
         {
-            List<Users> lista_users = new List<Users>();
+            List<User> lista_users = new List<User>();
             SqlConnection db_connection_user = new SqlConnection(connection_string);
             db_connection_user.Open();
 
             SqlCommand fatch_users = new SqlCommand(@"select id_user, email, password, first_name, last_name, join_date 
-                                                    from users",db_connection_user);
+                                                    from users", db_connection_user);
 
             SqlDataReader data_reader_user = fatch_users.ExecuteReader();
-             
+
             //Citim pe rand atributele utilizatorilor.
             while (data_reader_user.Read())
             {
@@ -107,7 +107,7 @@ namespace db_mapping
                 }
                 DateTime join_date = data_reader_user.GetDateTime(5);
 
-                Users user = new Users();
+                User user = new User();
                 user.Initialize(id, email, password, first_name, last_name, join_date);
                 lista_users.Add(user);
             }
@@ -115,5 +115,103 @@ namespace db_mapping
             return lista_users;
         }
 
+        public static void insertUser(User user, string connection_string)
+        {
+            SqlConnection insert_user_connection = new SqlConnection(connection_string);
+            insert_user_connection.Open();
+            SqlCommand insert_user_command = new SqlCommand(
+                                            @"insert into users 
+                                              values(@email, @parola, @first_name, @last_name, @Date)",
+                                              insert_user_connection);
+            insert_user_command.Parameters.Add(new SqlParameter("@email", user.getEmail()));
+            insert_user_command.Parameters.Add(new SqlParameter("@parola", user.getPassword()));
+            if (user.getFirstName() == null)
+                insert_user_command.Parameters.Add(new SqlParameter("@first_name", (object)DBNull.Value));
+            else
+                insert_user_command.Parameters.Add(new SqlParameter("@first_name", user.getFirstName()));
+
+            if (user.getLastName() == null)
+                insert_user_command.Parameters.Add(new SqlParameter("@last_name", (object)DBNull.Value));
+            else
+                insert_user_command.Parameters.Add(new SqlParameter("@last_name", user.getLastName()));
+            insert_user_command.Parameters.Add(new SqlParameter("@date", user.getJoinDate()));
+            insert_user_command.ExecuteNonQuery();
+            insert_user_connection.Close();
+            int id = getUserIdByEmail(user.getEmail(), connection_string);
+            if (user.getSpecificsList() != null)
+                insertSpecificsForUser(id, user.getSpecificsList(), connection_string);
+        }
+
+        public static int getUserIdByEmail(string email, string connection_string)
+        {
+            SqlConnection get_user_id_connection = new SqlConnection(connection_string);
+            get_user_id_connection.Open();
+            SqlCommand get_user_id_command = new SqlCommand(
+                        @"select id_user
+                          from users
+                          where email = @email",
+                        get_user_id_connection);
+            get_user_id_command.Parameters.Add(new SqlParameter("@email", email));
+            SqlDataReader get_user_id_reader = get_user_id_command.ExecuteReader();
+            get_user_id_reader.Read();
+            int id = get_user_id_reader.GetInt32(0);
+            get_user_id_reader.Close();
+            get_user_id_connection.Close();
+            return id;
+        }
+
+        public static bool checkEmailIfExist(string email, string connection_string)
+        {
+            SqlConnection get_user_id_connection = new SqlConnection(connection_string);
+            get_user_id_connection.Open();
+            SqlCommand get_user_id_command = new SqlCommand(
+                        @"select count(*)
+                          from users
+                          where email = @email",
+                        get_user_id_connection);
+            get_user_id_command.Parameters.Add(new SqlParameter("@email", email));
+            SqlDataReader get_user_id_reader = get_user_id_command.ExecuteReader();
+            get_user_id_reader.Read();
+            int appearance  = get_user_id_reader.GetInt32(0);
+            get_user_id_reader.Close();
+            get_user_id_connection.Close();
+            if (appearance > 0)
+                return true;
+            return false;
+        }
+
+        public static int getSpecificId(string denumire_specific, string connection_string)
+        {
+            SqlConnection get_user_id_connection = new SqlConnection(connection_string);
+            get_user_id_connection.Open();
+            SqlCommand get_user_id_command = new SqlCommand(
+                        @"select id_specific
+                          from specific
+                          where denumire_specific = @denumire_specific",
+                        get_user_id_connection);
+            get_user_id_command.Parameters.Add(new SqlParameter("@denumire_specific", denumire_specific));
+            SqlDataReader get_user_id_reader = get_user_id_command.ExecuteReader();
+            get_user_id_reader.Read();
+            int id = get_user_id_reader.GetInt32(0);
+            get_user_id_reader.Close();
+            get_user_id_connection.Close();
+            return id;
+        }
+
+        private static void insertSpecificsForUser(int id, List<string> specifics_list, string connection_string)
+        {
+            foreach(string specific in specifics_list)
+            {
+                SqlConnection insert_specifics_for_user_connection = new SqlConnection(connection_string);
+                insert_specifics_for_user_connection.Open();
+                SqlCommand insert_specifics_for_user_command = new SqlCommand(
+                    @"insert into prefera values(@user, @specific)",
+                    insert_specifics_for_user_connection);
+                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@user",id));
+                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@specific", getSpecificId(specific,connection_string)));
+                insert_specifics_for_user_command.ExecuteNonQuery();
+                insert_specifics_for_user_connection.Close();
+            }
+        }
     }
 } // namespace

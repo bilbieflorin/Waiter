@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
@@ -50,12 +52,30 @@ public partial class Contact : System.Web.UI.Page
         {
             args.IsValid = false;
             commentsformgroup.Attributes["class"] = "form-group has-error has-feedback";
-            CommentsTextBox.Attributes["aria-describedby"] = "inputError2Status";
+            MessageTextBox.Attributes["aria-describedby"] = "inputError2Status";
             HtmlGenericControl span = new HtmlGenericControl("span");
             span.Attributes["class"] = "glyphicon glyphicon-remove form-control-feedback";
             span.Attributes["aria-hidden"] = "true";
             span.Attributes["id"] = "glyphicon";
             commentsformgroup.Controls.Add(span);
+        }
+    }
+    protected void sendButtonClick(object sender, EventArgs e)
+    {
+        Page.Validate();
+        if(Page.IsValid)
+        {
+            MailMessage mail = new MailMessage("ipproiect@gmail.com", "bilbieflorin@gmail.com");
+            SmtpClient client = new SmtpClient();
+            client.Port = 25;
+            client.EnableSsl = true;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Host = "smtp.gmail.com";
+            client.Credentials = new NetworkCredential("ipproiect@gmail.com", "proiectip10");
+            mail.Subject = "Contact";
+            mail.Body = MessageTextBox.Text;
+            client.Send(mail);
         }
     }
 }

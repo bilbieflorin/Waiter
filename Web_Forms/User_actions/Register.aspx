@@ -8,7 +8,7 @@
         <div class="form-group" id="emailformgroup" runat="server">
             <label class="control-label" for="EmailTextBox">Adresa email</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="EmailTextBox" placeholder="Introduceti adresa email" />
-            <asp:CustomValidator ID="CustomValidator1" runat="server" ErrorMessage="Adresa de email invalida!" ForeColor="Red" Display="Dynamic" ControlToValidate="EmailTextBox" OnServerValidate="emailServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
+            <asp:CustomValidator ID="CustomValidator1" runat="server" ErrorMessage="Adresa de email invalida sau in uz!" ForeColor="Red" Display="Dynamic" ControlToValidate="EmailTextBox" OnServerValidate="emailServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
         </div>
          <div class="form-group">
             <label class="control-label" for="LastNameTextBox">Nume</label>
@@ -34,6 +34,6 @@
             </asp:CheckBoxList>
             <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:ConnectionString %>' SelectCommand="SELECT [DENUMIRE_SPECIFIC] FROM [SPECIFIC] ORDER BY [DENUMIRE_SPECIFIC]"></asp:SqlDataSource>
         </div>
-        <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Inregistrare"></asp:Button>
+        <asp:Button ID="RegisterButton" CssClass="btn btn-primary" OnClick="registerButtonClick" runat="server" Text="Inregistrare"></asp:Button>
     </div>
 </asp:Content>

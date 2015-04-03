@@ -6,21 +6,24 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using db_mapping;
 
 public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         if (IsPostBack)
         {
             PasswordTextBox.Attributes.Add("value", PasswordTextBox.Text);
         }
+
     }
     
     protected void emailServerValidate(object source, ServerValidateEventArgs args)
     {
         Regex email_regular_expression = new Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
-        if (email_regular_expression.IsMatch(args.Value) && args.Value.Length > 0)
+        if (email_regular_expression.IsMatch(args.Value) && args.Value.Length > 0 && !DatabaseFunctions.checkEmailIfExist(args.Value,connection_string_))
         {
             args.IsValid = true;
             emailformgroup.Attributes["class"] = "form-group";
@@ -81,4 +84,28 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
             confirmpasswordformgroup.Controls.Add(span);
         }
     }
+
+    protected void registerButtonClick(object sender, EventArgs e)
+    {
+        Page.Validate();
+        if (Page.IsValid)
+        {
+            User user = new User();
+            string email = EmailTextBox.Text;
+            string password = PasswordTextBox.Text;
+            string first_name = (String.IsNullOrEmpty(FirstNameTextBox.Text)) ? null : FirstNameTextBox.Text;
+            string last_name = (String.IsNullOrEmpty(LastNameTextBox.Text)) ? null : LastNameTextBox.Text;
+            List<string> specifics_list = new List<string>();
+            foreach (ListItem specific in SpecificCheckBoxList.Items)
+                if (specific.Selected == true)
+                    specifics_list.Add(specific.Text);
+            if (specifics_list.Count == 0)
+                specifics_list = null;
+            user.Initialize(-100000, email, password, first_name, last_name, DateTime.Now, specifics_list);
+            DatabaseFunctions.insertUser(user, connection_string_);
+            Response.Redirect("../../WebForms/Master/Waiter.aspx");
+        }
+    }
+
+    private string connection_string_;
 }

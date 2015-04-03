@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Waiter", "..\..\..\Documents\GitHub\Waiter\", "{BE0F31C4-5B20-4CDE-8A70-BBAB0F9FF8F3}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Waiter", ".", "{BE0F31C4-5B20-4CDE-8A70-BBAB0F9FF8F3}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		Debug.AspNetCompiler.VirtualPath = "/Waiter"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\..\Documents\GitHub\Waiter\"
+		Debug.AspNetCompiler.PhysicalPath = "..\Waiter\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Waiter\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/Waiter"
-		Release.AspNetCompiler.PhysicalPath = "..\..\..\Documents\GitHub\Waiter\"
+		Release.AspNetCompiler.PhysicalPath = "..\Waiter\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Waiter\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
