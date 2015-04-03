@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Waiter", "..\..\..\Documents\GitHub\Waiter\", "{BE0F31C4-5B20-4CDE-8A70-BBAB0F9FF8F3}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/Waiter"
+		Debug.AspNetCompiler.PhysicalPath = "..\..\..\Documents\GitHub\Waiter\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Waiter\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/Waiter"
+		Release.AspNetCompiler.PhysicalPath = "..\..\..\Documents\GitHub\Waiter\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Waiter\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "54026"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE0F31C4-5B20-4CDE-8A70-BBAB0F9FF8F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE0F31C4-5B20-4CDE-8A70-BBAB0F9FF8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
