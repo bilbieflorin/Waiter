@@ -7,7 +7,7 @@
     <div class="jumbotron" style="background:inherit">
         <h1>Hello, world!</h1>
         <p>...</p>
-        <p><a class="btn btn-primary btn-lg" href="../User_actions/Login.aspx" role="button">Login</a></p>
-        <p><a class="btn btn-primary btn-lg" href="../User_actions/Register.aspx" role="button">Register</a></p>
+        <p><a class="btn btn-primary btn-lg" href="../../Web_Forms/User_actions/Login.aspx" role="button">Login</a></p>
+        <p><a class="btn btn-primary btn-lg" href="../../Web_Forms/User_actions/Register.aspx" role="button">Register</a></p>
     </div>
 </asp:Content>
