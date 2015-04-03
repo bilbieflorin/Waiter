@@ -27,20 +27,22 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="../Master/Waiter.aspx">Waiter!</a>
+                    <a class="navbar-brand" href="../../Web_Forms/Master/Waiter.aspx">Waiter!</a>
                 </div>
                 <div class="collapse navbar-collapse" id="collapse-1">
                     <ul class="nav navbar-nav navbar-left">
                         <li runat="server" id="MeniuHyperLink">
                             <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="../Menu/Meniu.aspx">Meniu</asp:HyperLink></li>
                         <li id="RecomandariHyperLink" runat="server">
-                            <asp:HyperLink runat="server" NavigateUrl="../Menu/Recomandari.aspx">Recomandari</asp:HyperLink></li>
+                            <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/Menu/Recomandari.aspx">Recomandari</asp:HyperLink></li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="../../Web_Forms/Test/Test.aspx">Test</asp:HyperLink></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li id="ComandaHyperLink" runat="server">
-                            <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="../User_actions/Comanda.aspx">Comanda mea</asp:HyperLink></li>
+                            <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="../../Web_Forms/User_actions/Comanda.aspx">Comanda mea</asp:HyperLink></li>
                         <li id="ContactHyperLink" runat="server">
-                            <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="../User_actions/Contact.aspx">Contact</asp:HyperLink></li>
+                            <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="../../Web_Forms/User_actions/Contact.aspx">Contact</asp:HyperLink></li>
                     </ul>
                 </div>
             </div>

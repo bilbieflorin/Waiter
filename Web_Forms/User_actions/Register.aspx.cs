@@ -16,7 +16,8 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
             PasswordTextBox.Attributes.Add("value", PasswordTextBox.Text);
         }
     }
-    protected void Email_ServerValidate(object source, ServerValidateEventArgs args)
+    
+    protected void emailServerValidate(object source, ServerValidateEventArgs args)
     {
         Regex email_regular_expression = new Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
         if (email_regular_expression.IsMatch(args.Value) && args.Value.Length > 0)
@@ -38,7 +39,8 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
         }
 
     }
-    protected void Password_ServerValidate(object source, ServerValidateEventArgs args)
+    
+    protected void passwordServerValidate(object source, ServerValidateEventArgs args)
     {
         if (args.Value.Length > 3 && args.Value.Length < 20)
         {
@@ -58,7 +60,8 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
             passwordformgroup.Controls.Add(span);
         }
     }
-    protected void ConfirmPassword_ServerValidate(object source, ServerValidateEventArgs args)
+   
+    protected void confirmPasswordServerValidate(object source, ServerValidateEventArgs args)
     {
         if (args.Value.Length > 3 && args.Value.Length < 21 && args.Value == PasswordTextBox.Text)
         {

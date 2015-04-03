@@ -22,7 +22,7 @@ namespace db_mapping
 
             db_connection_preparate.Open();
             SqlCommand fetch_preparate = new SqlCommand(
-                    @"select id_preparat, denumire_preparat, tip_preparat, path, cantitate, pret, denumire_specific
+                    @"select id_preparat, denumire_preparat, tip_preparat, path, gramaj, pret, denumire_specific
                       from preparate join specific on (
                       preparate.id_specific = specific.id_specific)",
                       db_connection_preparate);

@@ -3,16 +3,18 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-    <div class="panel-heading page-header text-center"><h1>Login</h1></div>
+    <div class="panel-heading page-header text-center"><h1>Autentificare</h1></div>
     <div class="panel-body">
-        <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <asp:TextBox runat="server" CssClass="form-control" ID="EmailTextBox" placeholder="Enter email" Text=""/>
+        <div class="form-group" id="emailformgroup" runat="server">
+            <label class="control-label">Adresa email</label>
+            <asp:TextBox runat="server" CssClass="form-control" ID="EmailTextBox" placeholder="Introduceti adresa email" />
+            <asp:CustomValidator ID="CustomValidator1" runat="server" ErrorMessage="Adresa de email invalida!" ForeColor="Red" Display="Dynamic" ControlToValidate="EmailTextBox" OnServerValidate="emailServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
         </div>
-        <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <asp:TextBox runat="server" CssClass="form-control" ID="PasswordTextBox" placeholder="Password" TextMode="Password" Text=""/>
+        <div class="form-group" id="passwordformgroup" runat="server">
+            <label class="control-label">Parola</label>
+            <asp:TextBox runat="server" CssClass="form-control" placeholder="Introduceti parola" ID="PasswordTextBox" TextMode="Password" />
+            <asp:CustomValidator ID="Password" runat="server"  ErrorMessage="Introduceti parola!" ForeColor="Red" Display="Dynamic"  ControlToValidate="PasswordTextBox" OnServerValidate="passwordServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
         </div>
-        <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Login"></asp:Button>
+        <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Autentificare"></asp:Button>
     </div>
 </asp:Content>
