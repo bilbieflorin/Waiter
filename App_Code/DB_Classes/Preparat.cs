@@ -23,7 +23,7 @@ namespace db_mapping
             id_ = UninitializedInt;
             denumire_preparat_ = path_imagine_preparat_ = tip_preparat_ =
                 denumire_specific_ = null;
-            cantitate_ = pret_ = UninitializedDouble;
+            gramaj_ = pret_ = UninitializedDouble;
             data_adaugare_ = default(DateTime);
             lista_ingrediente_ = new List<string>();
         }
@@ -54,7 +54,7 @@ namespace db_mapping
             tip_preparat_ = tip_preparat;
             pret_ = pret;
             path_imagine_preparat_ = path_imagine;
-            cantitate_ = cantitate;
+            gramaj_ = cantitate;
             denumire_specific_ = denumire_specific;
             data_adaugare_ = data_adaugare;
             lista_ingrediente_ = lista_ingrediente;
@@ -73,7 +73,7 @@ namespace db_mapping
                 preparat += "Tip Preparat = " + tip_preparat_ + " ";
                 preparat += "Pret = " + pret_ + " ";
                 preparat += "Path Imagine Preparat = " + path_imagine_preparat_ + " ";
-                preparat += "Cantitate = " + cantitate_ + " ";
+                preparat += "Cantitate = " + gramaj_ + " ";
                 preparat += "Id Specific = " + denumire_specific_ + " ";
                 preparat += "Data Adaugare = " + data_adaugare_ + "\n";
 
@@ -103,9 +103,9 @@ namespace db_mapping
             return tip_preparat_;
         }
 
-        public double getCantitate()
+        public double getGramaj()
         {
-            return cantitate_;
+            return gramaj_;
         }
 
         public double getPret()
@@ -127,7 +127,7 @@ namespace db_mapping
         private String denumire_preparat_;
         private String path_imagine_preparat_;
         private String tip_preparat_;
-        private double cantitate_;
+        private double gramaj_;
         private double pret_;
         private String denumire_specific_;
         private DateTime data_adaugare_;

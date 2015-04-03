@@ -22,7 +22,7 @@ namespace db_mapping
 
             db_connection_preparate.Open();
             SqlCommand fetch_preparate = new SqlCommand(
-                    @"select id_preparat, denumire_preparat, tip_preparat, path, cantitate, pret, denumire_specific
+                    @"select id_preparat, denumire_preparat, tip_preparat, path, gramaj, pret, denumire_specific
                       from preparate join specific on (
                       preparate.id_specific = specific.id_specific)",
                       db_connection_preparate);
@@ -41,7 +41,7 @@ namespace db_mapping
                 {
                     path = data_reader_preparate.GetString(3);
                 }
-                double cantitate = data_reader_preparate.GetDouble(4);
+                double gramaj = data_reader_preparate.GetDouble(4);
                 double pret = data_reader_preparate.GetDouble(5);
                 string specific = null;
                 if (!data_reader_preparate.IsDBNull(6))
@@ -68,7 +68,7 @@ namespace db_mapping
                 }
 
                 Preparat preparat = new Preparat();
-                preparat.Initialize(id, denumire, tip, pret, path, cantitate, specific,
+                preparat.Initialize(id, denumire, tip, pret, path, gramaj, specific,
                     lista_ingrediente);
                 lista_preparate.Add(preparat);
             }

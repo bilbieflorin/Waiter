@@ -18,7 +18,6 @@
             <label class="control-label" for="FirstNameTextBox">Prenume</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="FirstNameTextBox" placeholder="Introduceti prenumele" />
         </div>
-         
         <div class="form-group" id="passwordformgroup" runat="server">
             <label class="control-label" for="PasswordTextBox">Parola</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="PasswordTextBox" placeholder="Introduceti parola" TextMode="Password"/>
@@ -28,6 +27,12 @@
             <label class="control-label" for="ConfirmPasswordTextBox">Confirmare parola</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="ConfirmPasswordTextBox" placeholder="Reintroduceti parola" TextMode="Password"/>
             <asp:CustomValidator ID="ConfirmPassword" runat="server" ErrorMessage="Parola nu corespunde!" ForeColor="Red" Display="Dynamic" ControlToValidate="ConfirmPasswordTextBox" OnServerValidate="confirmPasswordServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Specific preferat</label>
+            <asp:CheckBoxList runat="server" ID="SpecificCheckBoxList" DataSourceID="SqlDataSource1" DataTextField="DENUMIRE_SPECIFIC" DataValueField="DENUMIRE_SPECIFIC">
+            </asp:CheckBoxList>
+            <asp:SqlDataSource runat="server" ID="SqlDataSource1" ConnectionString='<%$ ConnectionStrings:ConnectionString %>' SelectCommand="SELECT [DENUMIRE_SPECIFIC] FROM [SPECIFIC] ORDER BY [DENUMIRE_SPECIFIC]"></asp:SqlDataSource>
         </div>
         <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Inregistrare"></asp:Button>
     </div>
