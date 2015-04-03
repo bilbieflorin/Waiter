@@ -15,14 +15,14 @@ namespace db_mapping
     {
         // Intoarce lista de preparate din BD, fara sa ia in considerare
         // coloana "data_adaugare".
-        static public List<Preparat> getPreparate(string connection_string)
+        public static List<Preparat> getPreparate(string connection_string)
         {
             List<Preparat> lista_preparate = new List<Preparat>();
             SqlConnection db_connection_preparate = new SqlConnection(connection_string);
 
             db_connection_preparate.Open();
             SqlCommand fetch_preparate = new SqlCommand(
-                    @"select id_preparat, denumire_preparat, tip_preparat, path, gramaj, pret, denumire_specific
+                    @"select id_preparat, denumire_preparat, tip_preparat, path, cantitate, pret, denumire_specific
                       from preparate join specific on (
                       preparate.id_specific = specific.id_specific)",
                       db_connection_preparate);
@@ -76,6 +76,43 @@ namespace db_mapping
 
 
             return lista_preparate;
+        }
+
+        public static List<Users> getUsers(string connection_string)
+        {
+            List<Users> lista_users = new List<Users>();
+            SqlConnection db_connection_user = new SqlConnection(connection_string);
+            db_connection_user.Open();
+
+            SqlCommand fatch_users = new SqlCommand(@"select id_user, email, password, first_name, last_name, join_date 
+                                                    from users)",db_connection_user);
+
+            SqlDataReader data_reader_user = fatch_users.ExecuteReader();
+             
+            //Citim pe rand atributele utilizatorilor.
+            while (data_reader_user.Read())
+            {
+                int id = data_reader_user.GetInt32(0);
+                string email = data_reader_user.GetString(1);
+                string password = data_reader_user.GetString(2);
+                string first_name = null;
+                if (!data_reader_user.IsDBNull(3))
+                {
+                    first_name = data_reader_user.GetString(3);
+                }
+                string last_name = null;
+                if (!data_reader_user.IsDBNull(4))
+                {
+                    last_name = data_reader_user.GetString(4);
+                }
+                DateTime join_date = data_reader_user.GetDateTime(5);
+
+                Users user = new Users();
+                user.Initialize(id, email, password, first_name, last_name, join_date);
+                lista_users.Add(user);
+            }
+
+            return lista_users;
         }
 
     }
