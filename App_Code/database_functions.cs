@@ -85,7 +85,7 @@ namespace db_mapping
             db_connection_user.Open();
 
             SqlCommand fatch_users = new SqlCommand(@"select id_user, email, password, first_name, last_name, join_date 
-                                                    from users)",db_connection_user);
+                                                    from users",db_connection_user);
 
             SqlDataReader data_reader_user = fatch_users.ExecuteReader();
              
