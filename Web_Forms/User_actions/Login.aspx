@@ -5,6 +5,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="panel-heading page-header text-center"><h1>Autentificare</h1></div>
     <div class="panel-body">
+        <div id="status" runat="server" class="alert alert-danger text-center">
+            <p>Adresa de email/parola invalida!</p>
+        </div>
         <div class="form-group" id="emailformgroup" runat="server">
             <label class="control-label">Adresa email</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="EmailTextBox" placeholder="Introduceti adresa email" />
@@ -15,6 +18,6 @@
             <asp:TextBox runat="server" CssClass="form-control" placeholder="Introduceti parola" ID="PasswordTextBox" TextMode="Password" />
             <asp:CustomValidator ID="Password" runat="server"  ErrorMessage="Introduceti parola!" ForeColor="Red" Display="Dynamic"  ControlToValidate="PasswordTextBox" OnServerValidate="passwordServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
         </div>
-        <asp:Button ID="Button1" CssClass="btn btn-primary" runat="server" Text="Autentificare"></asp:Button>
+        <asp:Button ID="LoginButton" CssClass="btn btn-primary" runat="server" Text="Autentificare" OnClick="loginButtonClick"></asp:Button>
     </div>
 </asp:Content>

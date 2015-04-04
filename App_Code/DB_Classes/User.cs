@@ -32,6 +32,13 @@ namespace db_mapping
             specifics_list_ = specifics_list;
         }
 
+        public bool isInitialized()
+        {
+            if (id_ == UninitializedInt && email_ == null && password_ == null)
+                return false;
+            return true;
+        }
+
         public String toString()
         {
             String user = "";

@@ -172,7 +172,7 @@ namespace db_mapping
             get_user_id_command.Parameters.Add(new SqlParameter("@email", email));
             SqlDataReader get_user_id_reader = get_user_id_command.ExecuteReader();
             get_user_id_reader.Read();
-            int appearance  = get_user_id_reader.GetInt32(0);
+            int appearance = get_user_id_reader.GetInt32(0);
             get_user_id_reader.Close();
             get_user_id_connection.Close();
             if (appearance > 0)
@@ -200,18 +200,47 @@ namespace db_mapping
 
         private static void insertSpecificsForUser(int id, List<string> specifics_list, string connection_string)
         {
-            foreach(string specific in specifics_list)
+            foreach (string specific in specifics_list)
             {
                 SqlConnection insert_specifics_for_user_connection = new SqlConnection(connection_string);
                 insert_specifics_for_user_connection.Open();
                 SqlCommand insert_specifics_for_user_command = new SqlCommand(
                     @"insert into prefera values(@user, @specific)",
                     insert_specifics_for_user_connection);
-                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@user",id));
-                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@specific", getSpecificId(specific,connection_string)));
+                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@user", id));
+                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@specific", getSpecificId(specific, connection_string)));
                 insert_specifics_for_user_command.ExecuteNonQuery();
                 insert_specifics_for_user_connection.Close();
             }
         }
+
+        public static User checkEmailAndPasswordIfExists(string email, string password, string conection_string)
+        {
+            SqlConnection get_user_connection = new SqlConnection(conection_string);
+            get_user_connection.Open();
+
+            SqlCommand get_user_connection_command = new SqlCommand(@"select *
+                                                                 from users
+                                                                 where email = @email and password = @password",
+                                                                get_user_connection);
+            get_user_connection_command.Parameters.Add(new SqlParameter("@email", email));
+            get_user_connection_command.Parameters.Add(new SqlParameter("@password", password));
+
+            SqlDataReader get_user_reader = get_user_connection_command.ExecuteReader();
+            User user = new User();
+            if (get_user_reader.Read())
+            {
+                user.Initialize(
+                    get_user_reader.GetInt32(0),
+                    get_user_reader.GetString(1),
+                    get_user_reader.GetString(2),
+                    (get_user_reader.IsDBNull(3)) ? null : get_user_reader.GetString(3),
+                    (get_user_reader.IsDBNull(4)) ? null : get_user_reader.GetString(4),
+                    get_user_reader.GetDateTime(5),
+                    null);
+            }
+            return user;
+        }
+
     }
 } // namespace

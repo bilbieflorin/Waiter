@@ -48,14 +48,21 @@
             </div>
         </nav>
         <div class="row-fluid">
-            <div class="col-md-3 col-xs-1" style="clear: left">
+            <div class="col-md-3 col-sm-2 col-xs-1" style="clear: left">
             </div>
-            <div class="col-md-6 col-xs-10" style="background: url('../../Images/bck2.png')">
-                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-                </asp:ContentPlaceHolder>
+            <div class="col-md-6 col-sm-8 col-xs-10 container-fluid">
+                <div class="panel" style="background: #FFFFB8">
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
             </div>
-            <div class="col-md-3 col-xs-1"></div>
+            <div class="col-md-3 col-sm-2 col-xs-1"></div>
         </div>
+        <footer class="footer inherit">
+            <div class="container inherit">
+                <p class="text-center inherit">Waiter! App. Master Minds &copy;</p>
+            </div>
+        </footer>
     </form>
 </body>
 </html>

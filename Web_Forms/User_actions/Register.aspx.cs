@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
@@ -92,7 +94,7 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
         {
             User user = new User();
             string email = EmailTextBox.Text;
-            string password = PasswordTextBox.Text;
+            string password = sha256(PasswordTextBox.Text);
             string first_name = (String.IsNullOrEmpty(FirstNameTextBox.Text)) ? null : FirstNameTextBox.Text;
             string last_name = (String.IsNullOrEmpty(LastNameTextBox.Text)) ? null : LastNameTextBox.Text;
             List<string> specifics_list = new List<string>();
@@ -101,11 +103,39 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
                     specifics_list.Add(specific.Text);
             if (specifics_list.Count == 0)
                 specifics_list = null;
-            user.Initialize(-100000, email, password, first_name, last_name, DateTime.Now, specifics_list);
+            user.Initialize(
+                -100000, 
+                email, 
+                password, 
+                first_name, 
+                last_name, 
+                DateTime.Now, 
+                specifics_list);
             DatabaseFunctions.insertUser(user, connection_string_);
-            Response.Redirect("../../WebForms/Master/Waiter.aspx");
+            user.Initialize(
+                DatabaseFunctions.getUserIdByEmail(email,connection_string_), 
+                email, 
+                password, 
+                first_name, 
+                last_name, 
+                DateTime.Now, 
+                specifics_list);
+            Session["user"] = user;
+            Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
         }
     }
 
     private string connection_string_;
+
+    private string sha256(string password)
+    {
+        SHA256Managed crypt = new SHA256Managed();
+        string hash = String.Empty;
+        byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(password), 0, Encoding.UTF8.GetByteCount(password));
+        foreach (byte bit in crypto)
+        {
+            hash += bit.ToString("x2");
+        }
+        return hash;
+    }
 }

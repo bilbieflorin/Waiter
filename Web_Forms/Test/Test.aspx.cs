@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -33,8 +35,23 @@ public partial class Test : System.Web.UI.Page
         //    show_content.Controls.Add(continut_users);
         //    show_content.Controls.Add(br);
         //}
-        Label id_specific = new Label();
-        id_specific.Text = DatabaseFunctions.getSpecificId("Italian",ConnectionString)+"";
-        show_content.Controls.Add(id_specific);
+        Label label = new Label(), label2 = new Label();
+        show_content.Controls.Add(label);
+        show_content.Controls.Add(new HtmlGenericControl("br"));
+        show_content.Controls.Add(label2);
+        label.Text = sha256("1234");
+        label2.Text = sha256("123456789");
+    }
+
+     private string sha256(string password)
+    {
+        SHA256Managed crypt = new SHA256Managed();
+        string hash = String.Empty;
+        byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(password), 0, Encoding.UTF8.GetByteCount(password));
+        foreach (byte bit in crypto)
+        {
+            hash += bit.ToString("x2");
+        }
+        return hash;
     }
 }

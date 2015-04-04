@@ -4,10 +4,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-    <div class="jumbotron" style="background:inherit">
-        <h1>Hello, world!</h1>
-        <p>...</p>
-        <p><a class="btn btn-primary btn-lg" href="../../Web_Forms/User_actions/Login.aspx" role="button">Autentificare</a></p>
-        <p><a class="btn btn-primary btn-lg" href="../../Web_Forms/User_actions/Register.aspx" role="button">Inregistrare</a></p>
+    <div class="panel-heading page-header text-center">
+        <h1>Bine ati venit!</h1>
+    </div>
+    <div class="panel-body" style="background:inherit">
+        <p class="text-center text-info" style="font-size:large">Ma grabesc vreau la <a href="../../Web_Forms/Menu/Meniu.aspx">meniu</a>!</p>
+        <a class="btn btn-primary btn-lg pull-left xs-center" href="../../Web_Forms/User_actions/Login.aspx" role="button">Autentificare</a>
+        <a class="btn btn-primary btn-lg pull-right xs-center" href="../../Web_Forms/User_actions/Register.aspx" role="button">Inregistrare</a>
     </div>
 </asp:Content>
