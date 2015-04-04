@@ -39,14 +39,42 @@
             <ContentTemplate>
                 <asp:ListView ID="MeniuListView" runat="server" OnPagePropertiesChanging="MeniuListView_PagePropertiesChanging">
                     <LayoutTemplate>
-                        <ul>
+                        <%--<ul>--%>
                             <asp:PlaceHolder ID="itemPlaceholder" runat="server" />
-                        </ul>
+                        <%--</ul>--%>
                     </LayoutTemplate>
                     <ItemTemplate>
-                        <li style="list-style-type: none; margin-top: 5px; margin-bottom: 5px;">
-                            
-                            <!-- Div entry -->
+                        <%--<li style="list-style-type: none; margin-top: 5px; margin-bottom: 5px;">--%>
+
+                            <div class="row">
+                                <div class="col-md-1 col-sm-1 col-xs-2" style="border: 1px solid blue;">
+                                </div>
+                                <div class="col-md-10 col-sm-10 col-xs-8 container-fluid" style="border: 1px solid green;">
+                                    <div class="panel" style="background-color: mediumaquamarine; height:150px;">
+                                        <div class="row">
+                                            <div class="col-md-5" style="border: 1px solid black;">
+                                                <%--<div style="height: 100%; width: 100%; white-space: nowrap;">
+                                                    <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>--%>
+                                                    <asp:ImageButton ID="ImageButton1" runat="server"
+                                                        AlternateText="ImaginePreparat"
+                                                        ImageUrl='<%# Eval("PathImagine") %>'
+                                                        OnClick="MeniuListView_DetaliiPreparat"
+                                                        CommandName="DisplayIndex"
+                                                        CommandArgument="<%# Container.DisplayIndex %>"
+                                                        CssClass="img-thumbnail img-responsive"
+                                                        style="/*vertical-align: middle; max-width: 178px;*/ max-height: 125px;" />
+                                                <%--</div>--%>
+                                            </div>
+                                            <div class="col-md-7" style="border: 1px solid red;">
+                                                <p>Mesaj de test</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-2" style="border: 1px solid red;"></div>
+                            </div>
+
+                            <%--<!-- Div entry -->
                             <div class="container-fluid" style="width: 90%; height: 150px; background-color: mediumpurple;">
                                 
                                 <!-- Div imagine -->
@@ -66,8 +94,9 @@
                                     <%# Eval("Denumire") %>
                                 </div>
 
-                            </div>
-                        </li>
+                            </div>--%>
+
+                        <%--</li>--%>
                     </ItemTemplate>
                     <EmptyDataTemplate>
                         No data
@@ -81,24 +110,6 @@
             </ContentTemplate>
         </asp:UpdatePanel>
     </div>
-
-    <%--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" runat="server">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel" runat="server"></h4>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>--%>
 
     <!-- Bootstrap Modal Dialog -->
     <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -118,7 +129,6 @@
                                     Style="width: 90%; height: auto;" />
                             </div>
                             
-
 
                             <asp:Label ID="lblModalBody" runat="server" Text=""></asp:Label>
                         </div>

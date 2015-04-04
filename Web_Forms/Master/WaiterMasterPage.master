@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="../../Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../../Bootstrap/css/custom.css" rel="stylesheet" />
+    <%--<link href="../../Bootstrap/css/bootstrap-mobile-fix.css" rel="stylesheet">--%>
     <link rel="icon" href="favicon.ico" />
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="../../Bootstrap/js/bootstrap.min.js"></script>
@@ -49,17 +50,16 @@
                 </div>
             </div>
         </nav>
-        <div class="row-fluid">
-            <div class="col-md-3 col-sm-2 col-xs-1" style="clear: left">
+
+        <div class="col-md-3 col-sm-2 col-xs-1"></div>
+        <div class="col-md-6 col-sm-8 col-xs-10 container-fluid">
+            <div class="panel" style="background: #FFFFB8;">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                </asp:ContentPlaceHolder>
             </div>
-            <div class="col-md-6 col-sm-8 col-xs-10 container-fluid">
-                <div class="panel" style="background: #FFFFB8">
-                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-                    </asp:ContentPlaceHolder>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-2 col-xs-1"></div>
         </div>
+        <div class="col-md-3 col-sm-2 col-xs-1"></div>
+
         <footer class="footer inherit">
             <div class="container inherit">
                 <p class="text-center inherit">Waiter! App. Master Minds &copy;</p>

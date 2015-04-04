@@ -1,0 +1,9 @@
+﻿/* Fixed by using `content-box` */
+
+.row-contentbox .col-xs-1,
+.row-contentbox .col-xs-11 {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    padding: 0 1%;
+}
