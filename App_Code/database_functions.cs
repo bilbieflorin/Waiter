@@ -67,14 +67,16 @@ namespace db_mapping
                     lista_ingrediente.Add(denumire_ingredient);
                 }
 
+                data_reader_ingrediente.Close();
+                data_reader_ingrediente.Close();
+                
                 Preparat preparat = new Preparat();
                 preparat.Initialize(id, denumire, tip, pret, path, gramaj, specific,
                     lista_ingrediente);
                 lista_preparate.Add(preparat);
             }
-
-
-
+            data_reader_preparate.Close();
+            db_connection_preparate.Close();
             return lista_preparate;
         }
 
@@ -111,7 +113,8 @@ namespace db_mapping
                 user.Initialize(id, email, password, first_name, last_name, join_date);
                 lista_users.Add(user);
             }
-
+            data_reader_user.Close();
+            db_connection_user.Close();
             return lista_users;
         }
 
@@ -239,6 +242,8 @@ namespace db_mapping
                     get_user_reader.GetDateTime(5),
                     null);
             }
+            get_user_reader.Close();
+            get_user_connection.Close();
             return user;
         }
 
