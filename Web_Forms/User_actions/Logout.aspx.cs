@@ -5,11 +5,11 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class WaiterMasterPage : System.Web.UI.MasterPage
+public partial class Web_Forms_User_actions_Logout : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["user"] != null)
-            LogoutHyperLink.Visible = true;
+        Session.Abandon();
+        Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
     }
 }

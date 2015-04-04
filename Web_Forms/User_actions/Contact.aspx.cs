@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using db_mapping;
 
 public partial class Contact : System.Web.UI.Page
 {
@@ -15,6 +16,12 @@ public partial class Contact : System.Web.UI.Page
     {
         HtmlGenericControl contact = (HtmlGenericControl)Master.FindControl("ContactHyperLink");
         contact.Attributes["class"] += "active";
+        if (Session["user"] != null)
+        {
+            User user = Session["user"] as User;
+            EmailTextBox.Text = user.getEmail();
+            EmailTextBox.Enabled = false;
+        }
     }
 
     protected void emailServerValidate(object source, ServerValidateEventArgs args)
