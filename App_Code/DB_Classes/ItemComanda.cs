@@ -19,7 +19,7 @@ namespace db_mapping
         {
             preparat_ = preparat;
             cantitate_ = cantitate;
-            pret_ = preparat_.getPret() * cantitate_;
+            pret_ = preparat_.Pret * cantitate_;
         }
 
         // Seteaza o cantitate pentru obiectul ItemComanda
@@ -27,7 +27,7 @@ namespace db_mapping
         public void setCantitate(int cantitate)
         {
             cantitate_ = cantitate;
-            pret_ = preparat_.getPret() * cantitate_;
+            pret_ = preparat_.Pret * cantitate_;
         }
 
         // Returneaza intreg continutul unui obiect de tip ItemComanda

@@ -82,45 +82,45 @@ namespace db_mapping
             return preparat;
         }
 
-        // Getteri pentru fiecare atribut.
-        public int getId()
+        // Proprietati read-only.
+        public int Id
         {
-            return id_;
+            get { return id_; }
         }
 
-        public String getDenumirePreparat()
+        public String Denumire
         {
-            return denumire_preparat_;
+            get { return denumire_preparat_; }
         }
 
-        public String getPathImaginePreparat()
+        public String PathImagine
         {
-            return path_imagine_preparat_;
+            get { return path_imagine_preparat_; }
         }
 
-        public String getTipPreparat()
+        public String Tip
         {
-            return tip_preparat_;
+            get { return tip_preparat_; }
         }
 
-        public double getGramaj()
+        public double Gramaj
         {
-            return gramaj_;
+            get { return gramaj_; }
         }
 
-        public double getPret()
+        public double Pret
         {
-            return pret_;
+            get { return pret_; }
         }
 
-        public String getDenumireSpecific()
+        public String Specific
         {
-            return denumire_specific_;
+            get { return denumire_specific_; }
         }
 
-        public DateTime getDataAdaugare()
+        public DateTime DataAdaugare
         {
-            return data_adaugare_;
+            get { return data_adaugare_; }
         }
         
         private int id_;
@@ -132,7 +132,6 @@ namespace db_mapping
         private String denumire_specific_;
         private DateTime data_adaugare_;
         private List<String> lista_ingrediente_;
-
 
     }
 } // namespace
