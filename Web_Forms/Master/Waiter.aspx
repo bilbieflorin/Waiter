@@ -9,7 +9,7 @@
     </div>
     <div class="panel-body" style="background:inherit">
         <p class="text-center text-info" style="font-size:large">Ma grabesc vreau la <a href="../../Web_Forms/Menu/Meniu.aspx">meniu</a>!</p>
-        <a class="btn btn-primary btn-lg pull-left" href="../../Web_Forms/User_actions/Login.aspx" role="button">Autentificare</a>
-        <a class="btn btn-primary btn-lg pull-right" href="../../Web_Forms/User_actions/Register.aspx" role="button">Inregistrare</a>
+        <a class="btn btn-primary btn-lg pull-left xs-center" href="../../Web_Forms/User_actions/Login.aspx" role="button">Autentificare</a>
+        <a class="btn btn-primary btn-lg pull-right xs-center" href="../../Web_Forms/User_actions/Register.aspx" role="button">Inregistrare</a>
     </div>
 </asp:Content>

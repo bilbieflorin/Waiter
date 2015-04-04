@@ -121,7 +121,7 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
                 DateTime.Now, 
                 specifics_list);
             Session["user"] = user;
-            Response.Redirect("../../WebForms/Master/Waiter.aspx");
+            Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
         }
     }
 
