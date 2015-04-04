@@ -79,7 +79,7 @@ public partial class Contact : System.Web.UI.Page
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             client.Host = "smtp.sendgrid.net";
-            client.Credentials = new NetworkCredential("azure_58228c3bd80b12380caacb5e297e1f68@azure.com", "ySO2BQz26p4dyk1");
+            client.Credentials = new NetworkCredential("waiter@masterminds.com", "masterminds");
             mail.Subject = "Contact";
             mail.Body = MessageTextBox.Text;
             client.Send(mail);
