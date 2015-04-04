@@ -65,17 +65,21 @@ public partial class Contact : System.Web.UI.Page
         Page.Validate();
         if(Page.IsValid)
         {
-            MailMessage mail = new MailMessage("ipproiect@gmail.com", "bilbieflorin@gmail.com");
+            MailMessage mail = new MailMessage(EmailTextBox.Text, "ipproiect@gmail.com");
             SmtpClient client = new SmtpClient();
             client.Port = 25;
             client.EnableSsl = true;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Host = "smtp.gmail.com";
-            client.Credentials = new NetworkCredential("ipproiect@gmail.com", "proiectip10");
+            client.Host = "smtp.sendgrid.net";
+            client.Credentials = new NetworkCredential("azure_58228c3bd80b12380caacb5e297e1f68@azure.com", "ySO2BQz26p4dyk1");
             mail.Subject = "Contact";
             mail.Body = MessageTextBox.Text;
             client.Send(mail);
+            emailformgroup.Visible = false;
+            commentsformgroup.Visible = false;
+            SendButton.Visible = false;
+            feedbackMessage.Visible = true;
         }
     }
 }

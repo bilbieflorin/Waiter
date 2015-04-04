@@ -57,3 +57,24 @@
     background-color: #dd4c53;
   }
 }
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 20px;
+}
+.inherit {
+    background:inherit;
+    color: black;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+}
+
