@@ -138,4 +138,8 @@ body {
     }
 }
 
-
+nav.navbar.affix {
+    top: 0px; /* Set the top position of pinned element */
+    z-index:1;
+    width:100%;
+}

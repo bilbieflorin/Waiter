@@ -122,7 +122,11 @@ namespace db_mapping
         {
             get { return data_adaugare_; }
         }
-        
+
+        public List<String> ListaIngrediente
+        {
+            get { return lista_ingrediente_; }
+        }
         private int id_;
         private String denumire_preparat_;
         private String path_imagine_preparat_;

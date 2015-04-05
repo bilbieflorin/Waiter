@@ -17,9 +17,9 @@
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="../../Bootstrap/js/bootstrap.min.js"></script>
 </head>
-<body style="background: url('../../Images/background.jpg');">
+<body style="background: url('../../Images/backgrounda.jpg');background-attachment:fixed;background-size:cover;background-position:center">
     <form id="form1" runat="server">
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default" data-spy="affix" data-offset-top="0">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse-1">

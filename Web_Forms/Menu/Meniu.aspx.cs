@@ -62,7 +62,15 @@ public partial class Meniu : System.Web.UI.Page
 
             ModalItemTitle.Text = preparat.Denumire;
             ModalItemImage.ImageUrl = preparat.PathImagine;
-            ModalItemBody.InnerHtml = "Specific: " + preparat.Specific + "<br />" + "Tip: " + preparat.Tip + "<br />" + "Gramaj: " + preparat.Gramaj + "<br />" + "Pret: " + preparat.Pret;
+            string ingrediente =" ";
+            int i;
+            for(i=0; i < preparat.ListaIngrediente.Count-1; i++)
+            {
+                ingrediente+=preparat.ListaIngrediente[i]+", ";
+            }
+            ingrediente += preparat.ListaIngrediente[i]+".";
+            ModalItemBody.InnerHtml = "Specific: " + preparat.Specific + "<br />" + "Tip: " + preparat.Tip + "<br />" + "Gramaj: " + preparat.Gramaj + "<br />" + "Pret: " + preparat.Pret
+                + "<br />Ingrediente: "+ingrediente;
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
             ModalUpdatePanel.Update();
         }
