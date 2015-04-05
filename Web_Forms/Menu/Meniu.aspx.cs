@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -42,16 +43,28 @@ public partial class Meniu : System.Web.UI.Page
         MeniuListView.DataSource = meniu_;
         MeniuListView.DataBind();
     }
-    protected void MeniuListView_DetaliiPreparat(object sender, ImageClickEventArgs e)
+    protected void MeniuListItem_ImagineClick(object sender, ImageClickEventArgs e)
     {
-        ImageButton targetButton = sender as ImageButton;
+        ImageButton targetImage = sender as ImageButton;
 
-        Preparat preparat = meniu_[Convert.ToInt32(targetButton.CommandArgument) + MeniuDataPager.StartRowIndex];
+        if (targetImage.CommandName.Equals("DisplayIndex"))
+        {
+            int imageIndex = Convert.ToInt32(targetImage.CommandArgument);
 
-        lblModalTitle.Text = preparat.Denumire;
-        lblModalBody.Text = preparat.Pret + " " + preparat.Tip;
-        MeniuModalImage.ImageUrl = preparat.PathImagine;
-        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
-        upModal.Update();
+            // `imageIndex` e in functie de pozitia in pagina.
+            // 0 <= `imageIndex` <= MeniuDataPager.MaximumRows.
+            // Luam in calcul pe ce pagina de meniu suntem ca sa calculam corect indexul din lista interna.
+            int meniuIndex = imageIndex + MeniuDataPager.StartRowIndex;
+
+            Debug.Assert(meniuIndex < meniu_.Count, "Index inexistent, what went wrong?!");
+
+            Preparat preparat = meniu_[meniuIndex];
+
+            lblModalTitle.Text = preparat.Denumire;
+            lblModalBody.Text = preparat.Pret + " " + preparat.Tip;
+            MeniuModalImage.ImageUrl = preparat.PathImagine;
+            ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
+            upModal.Update();
+        }
     }
 }
