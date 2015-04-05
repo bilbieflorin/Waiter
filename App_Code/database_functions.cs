@@ -68,7 +68,7 @@ namespace db_mapping
                 }
 
                 data_reader_ingrediente.Close();
-                data_reader_ingrediente.Close();
+                db_connection_ingrediente.Close();
                 
                 Preparat preparat = new Preparat();
                 preparat.Initialize(id, denumire, tip, pret, path, gramaj, specific,
