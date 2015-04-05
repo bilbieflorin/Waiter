@@ -52,8 +52,8 @@
                                 <div class="panel <%--div-md-sm-panel div-xs-panel--%>" style="background-color: mediumaquamarine; /*border: 1px solid yellow;*/">
                                     <div class="row">
                                         <!-- Imagine -->
-                                        <div class="col-md-5 col-sm-5 div-md-center-item div-sm-center-item div-xs-center-item" style="/*border: 1px solid purple;*/">
-                                            <div style="height: 100%; width: 100%; white-space: nowrap; /*background-color: red;*/">
+                                        <div class="col-md-5 col-sm-5 div-md-sm-center-item div-xs-center-item" style="/*border: 1px solid purple;*/">
+                                            <div class="div-md-sm-center-item-image" style="height: 100%; width: 100%; white-space: nowrap; /*background-color: red;*/">
                                                 <span style="height: 100%; vertical-align: middle;"></span>
                                                 <asp:ImageButton ID="ImageButton1" runat="server"
                                                     AlternateText="ImaginePreparat"
@@ -61,11 +61,11 @@
                                                     OnClick="MeniuListItem_ImagineClick"
                                                     CommandName="DisplayIndex"
                                                     CommandArgument="<%# Container.DisplayIndex %>"
-                                                    CssClass="img-thumbnail img-responsive img-md-center-item img-sm-center-item img-xs-center-item"
+                                                    CssClass="img-thumbnail img-responsive img-md-sm-center-item img-xs-center-item"
                                                     Style="width: 178px; max-height: 125px;" />
                                             </div>
                                         </div>
-                                        <div class="col-md-7 col-sm-7 div-md-center-item div-sm-center-item div-xs-center-item" style="/*border: 1px solid pink;*/">
+                                        <div class="col-md-7 col-sm-7 div-md-sm-center-item div-xs-center-item" style="/*border: 1px solid pink;*/">
                                             <h4><%# Eval("Denumire") %></h4>
                                             <div class="div-md-sm-item-details div-xs-item-details">
                                                 <p><%# Eval("Tip", "Tip: {0}") %></p>
@@ -118,23 +118,28 @@
     <!-- Bootstrap Modal Dialog -->
     <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <asp:UpdatePanel ID="upModal" runat="server" ChildrenAsTriggers="false" UpdateMode="Conditional">
+            <asp:UpdatePanel ID="ModalUpdatePanel" runat="server" ChildrenAsTriggers="false" UpdateMode="Conditional">
                 <ContentTemplate>
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title text-center">
-                                <asp:Label ID="lblModalTitle" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="ModalItemTitle" runat="server" Text=""></asp:Label>
                             </h4>
                         </div>
                         <div class="modal-body" style="text-align:center;">
                             <div>
-                                <asp:Image ID="MeniuModalImage" runat="server"
+                                <asp:Image ID="ModalItemImage" runat="server"
                                     Style="width: 90%; height: auto;" />
                             </div>
                             
-
-                            <asp:Label ID="lblModalBody" runat="server" Text=""></asp:Label>
+                            <%--<asp:TextBox ID="ModalItemBody" runat="server"
+                                ReadOnly="true"
+                                BorderStyle="None"
+                                TextMode="MultiLine"
+                                Style="width: 100%; height: 100%; resize: none;">
+                            </asp:TextBox>--%>
+                            <p id="ModalItemBody" runat="server"></p>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-info" data-dismiss="modal" aria-hidden="true">Close</button>

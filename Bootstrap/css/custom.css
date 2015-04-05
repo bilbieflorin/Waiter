@@ -87,19 +87,21 @@ body {
     display: block;
 }
 
-.div-md-center-item,
+.div-md-sm-center-item,
 .div-sm-center-item {
     text-align: left;
     height: 150px;
 }
 
-    .div-md-center-item > div > span,
-    .div-sm-center-item > div > span {
+.div-md-sm-center-item-image {
+    text-align: center;
+}
+
+    .div-md-sm-center-item > div > span {
         display: inline-block;
     }
 
-.img-md-center-item,
-.img-sm-center-item {
+.img-md-sm-center-item {
     vertical-align: middle;
 }
 

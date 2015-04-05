@@ -56,15 +56,15 @@ public partial class Meniu : System.Web.UI.Page
             // Luam in calcul pe ce pagina de meniu suntem ca sa calculam corect indexul din lista interna.
             int meniuIndex = imageIndex + MeniuDataPager.StartRowIndex;
 
-            Debug.Assert(meniuIndex < meniu_.Count, "Index inexistent, what went wrong?!");
+            Debug.Assert(meniuIndex < meniu_.Count, "Index inexistent / meniu e null - ceea ce nu ar trebui sa se intample!");
 
             Preparat preparat = meniu_[meniuIndex];
 
-            lblModalTitle.Text = preparat.Denumire;
-            lblModalBody.Text = preparat.Pret + " " + preparat.Tip;
-            MeniuModalImage.ImageUrl = preparat.PathImagine;
+            ModalItemTitle.Text = preparat.Denumire;
+            ModalItemImage.ImageUrl = preparat.PathImagine;
+            ModalItemBody.InnerHtml = "Specific: " + preparat.Specific + "<br />" + "Tip: " + preparat.Tip + "<br />" + "Gramaj: " + preparat.Gramaj + "<br />" + "Pret: " + preparat.Pret;
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
-            upModal.Update();
+            ModalUpdatePanel.Update();
         }
     }
 }
