@@ -16,7 +16,7 @@
             <asp:CustomValidator ID="Comments" runat="server"  ErrorMessage="Mesajul trebuie sa contina minim 10 caractere!" ForeColor="Red" Display="Dynamic"  ControlToValidate="MessageTextBox" OnServerValidate="commentsServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
         </div>
         <asp:Button ID="SendButton" CssClass="btn btn-primary" OnClick="sendButtonClick" runat="server" Text="Trimite"></asp:Button>
-        <div class="alert alert-info text-center" runat="server" id="feedbackMessage" visible="false">
+        <div class="alert alert-success text-center" runat="server" id="feedbackMessage" visible="false">
             <p>Mesaj trimis cu succes!</p>
         </div>
     </div>

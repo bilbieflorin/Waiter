@@ -25,7 +25,7 @@ namespace db_mapping
                 denumire_specific_ = null;
             gramaj_ = pret_ = UninitializedDouble;
             data_adaugare_ = default(DateTime);
-            lista_ingrediente_ = new List<string>();
+            lista_ingrediente_ = new List<String>();
         }
 
         // Initializeaza atributele unui obiect de tip Preparat.

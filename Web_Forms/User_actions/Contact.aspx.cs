@@ -19,7 +19,7 @@ public partial class Contact : System.Web.UI.Page
         if (Session["user"] != null)
         {
             User user = Session["user"] as User;
-            EmailTextBox.Text = user.getEmail();
+            EmailTextBox.Text = user.Email;
             EmailTextBox.Enabled = false;
         }
     }
@@ -67,6 +67,7 @@ public partial class Contact : System.Web.UI.Page
             commentsformgroup.Controls.Add(span);
         }
     }
+   
     protected void sendButtonClick(object sender, EventArgs e)
     {
         Page.Validate();

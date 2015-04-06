@@ -23,7 +23,7 @@ public partial class Meniu : System.Web.UI.Page
             meniu_ = DatabaseFunctions.getPreparate(connection_string_);
             bindMeniuListViewData();
         }
-
+        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "", "$('.nbsp').each(function() {$(this).before($('<span>').html('&nbsp;')); $(this).after($('<span>').html('&nbsp;'));});", true);
     }
 
     protected void MeniuListView_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
@@ -38,27 +38,22 @@ public partial class Meniu : System.Web.UI.Page
     private string connection_string_;
     private static List<Preparat> meniu_;
 
-    private void bindMeniuListViewData()
+    protected void meniuListItemImagineClick(object sender, ImageClickEventArgs e)
     {
-        MeniuListView.DataSource = meniu_;
-        MeniuListView.DataBind();
-    }
-    protected void MeniuListItem_ImagineClick(object sender, ImageClickEventArgs e)
-    {
-        ImageButton targetImage = sender as ImageButton;
+        ImageButton target_image = sender as ImageButton;
 
-        if (targetImage.CommandName.Equals("DisplayIndex"))
+        if (target_image.CommandName.Equals("DisplayIndex"))
         {
-            int imageIndex = Convert.ToInt32(targetImage.CommandArgument);
+            int image_index = Convert.ToInt32(target_image.CommandArgument);
 
             // `imageIndex` e in functie de pozitia in pagina.
             // 0 <= `imageIndex` <= MeniuDataPager.MaximumRows.
             // Luam in calcul pe ce pagina de meniu suntem ca sa calculam corect indexul din lista interna.
-            int meniuIndex = imageIndex + MeniuDataPager.StartRowIndex;
+            int meniu_index = image_index + MeniuDataPager.StartRowIndex;
 
-            Debug.Assert(meniuIndex < meniu_.Count, "Index inexistent / meniu e null - ceea ce nu ar trebui sa se intample!");
+            Debug.Assert(meniu_index < meniu_.Count, "Index inexistent / meniu e null - ceea ce nu ar trebui sa se intample!");
 
-            Preparat preparat = meniu_[meniuIndex];
+            Preparat preparat = meniu_[meniu_index];
 
             ModalItemTitle.Text = preparat.Denumire;
             ModalItemImage.ImageUrl = preparat.PathImagine;
@@ -72,7 +67,35 @@ public partial class Meniu : System.Web.UI.Page
             ModalItemBody.InnerHtml = "Specific: " + preparat.Specific + "<br />" + "Tip: " + preparat.Tip + "<br />" + "Gramaj: " + preparat.Gramaj + "<br />" + "Pret: " + preparat.Pret
                 + "<br />Ingrediente: "+ingrediente;
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
+            ButtonComanda.CommandArgument = meniu_index + ""; 
             ModalUpdatePanel.Update();
         }
+    }
+    
+    protected void buttonComandaClick(object sender, EventArgs e)
+    {
+        Comanda comanda = Session["comanda"] as Comanda;
+        if (comanda == null)
+        {
+            User user = Session["user"] as User;
+            comanda = new Comanda();
+            if (user == null)
+                comanda.IdUser=0;
+            else
+                comanda.IdUser = user.Id;
+            comanda.Data = DateTime.Now;
+        }
+        Button order_button = sender as Button;
+        int index_meniu = Convert.ToInt32(order_button.CommandArgument);
+        ItemComanda item = new ItemComanda(meniu_[index_meniu], 1);
+        comanda.addItemComanda(item);
+        Session["comanda"] = comanda;
+        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal('hide')", true);
+    }
+
+    private void bindMeniuListViewData()
+    {
+        MeniuListView.DataSource = meniu_;
+        MeniuListView.DataBind();
     }
 }

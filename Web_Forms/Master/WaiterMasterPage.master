@@ -17,9 +17,9 @@
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="../../Bootstrap/js/bootstrap.min.js"></script>
 </head>
-<body style="background: url('../../Images/backgrounda.jpg');background-attachment:fixed;background-size:cover;background-position:center">
+<body style="background: url('../../Images/backgrounda.jpg');background-attachment:fixed;background-size:contain;">
     <form id="form1" runat="server">
-        <nav class="navbar navbar-default" data-spy="affix" data-offset-top="0">
+        <nav class="navbar navbar-default" data-spy="affix" data-offset-top="1">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse-1">
@@ -53,7 +53,7 @@
 
         <div class="col-md-3 col-sm-2 col-xs-1"></div>
         <div class="col-md-6 col-sm-8 col-xs-10 container-fluid">
-            <div class="panel" style="background: #FFFFB8;">
+            <div class="panel panel-default" style="background: #FFFFB8; padding-top:10px">
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                 </asp:ContentPlaceHolder>
             </div>

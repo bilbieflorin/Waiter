@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,14 +9,14 @@ namespace db_mapping
 
     /// <summary>
     /// Clasa Comanda mapeaza tabela "Comenzi" din baza de date.
-    /// Contine, in plus, un HashSet de ItemComanda, iar pretul se updateaza
+    /// Contine, in plus, un Hashtable de ItemComanda, iar pretul se updateaza
     /// la fiecare inserare de ItemComanda.
     /// </summary>
     public class Comanda
     {
         public Comanda()
         {
-            lista_item_comanda_ = new HashSet<ItemComanda>();
+            lista_item_comanda_ = new Hashtable();
             pret_ = 0;
         }
 
@@ -42,38 +43,44 @@ namespace db_mapping
         // Pretul comenzii este updatat.
         public void addItemComanda(ItemComanda item_comanda)
         {
-            lista_item_comanda_.Add(item_comanda);
-            pret_ += item_comanda.getPret();
+            pret_ += item_comanda.Pret;
+            if (lista_item_comanda_.ContainsKey(item_comanda.Preparat.Id))
+            {
+                ItemComanda item = lista_item_comanda_[item_comanda.Preparat.Id] as ItemComanda;
+                int cantitate = item_comanda.Cantitate + item.Cantitate;
+                item_comanda.Cantitate = cantitate;
+                lista_item_comanda_[item.Preparat.Id] = item_comanda;
+            }
+            else
+            {
+                lista_item_comanda_.Add(item_comanda.Preparat.Id, item_comanda);
+            }
         }
 
-        // Setteri.
-        public void setIdUser(int id_user)
+        // Setteri si getteri.
+        public int IdUser
         {
-            id_user_ = id_user;
+            get { return id_user_; }
+            set { id_user_ = value; }
         }
 
-        public void setDateTime(DateTime date_time)
+        public DateTime Data
         {
-            date_time_ = date_time;
+            get { return date_time_; }
+            set { date_time_ = value; }
         }
 
-        // Getteri.
-        public double getPret()
+        public double Pret
         {
-            return pret_;
+            get { return pret_; }
         }
 
-        public DateTime getDateTime()
+        public Hashtable ListaItem
         {
-            return date_time_;
+            get { return lista_item_comanda_; }
         }
 
-        public int getIdUser()
-        {
-            return id_user_;
-        }
-
-        private HashSet<ItemComanda> lista_item_comanda_;
+        private Hashtable lista_item_comanda_;
         private double pret_;
         private DateTime date_time_;
         private int id_user_;

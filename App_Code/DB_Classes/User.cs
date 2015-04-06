@@ -21,7 +21,7 @@ namespace db_mapping
         }
 
         public void Initialize(int id , String email , String password, String first_name = null, 
-            String last_name = null, DateTime join_date = default(DateTime), List<string> specifics_list = null)
+            String last_name = null, DateTime join_date = default(DateTime), List<String> specifics_list = null)
         {
             id_ = id;
             email_ = email;
@@ -55,29 +55,29 @@ namespace db_mapping
         }
 
         // Getteri pentru fiecare atribut.
-        public int getId()
+        public int Id
         {
-            return id_;
+            get { return id_; }
         }
 
-        public String getEmail()
+        public String Email
         {
-            return email_;
+            get { return email_; }
         }
 
-        public String getFirstName()
+        public String FirstName
         {
-            return first_name_;
+            get { return first_name_; }
         }
 
-        public String getLastName()
+        public String LastName
         {
-            return last_name_;
+            get { return last_name_; }
         }
 
-        public string getPassword()
+        public String Password
         {
-            return password_;
+            get { return password_; }
         }
 
         public DateTime getJoinDate()
@@ -85,17 +85,17 @@ namespace db_mapping
             return join_date_;
         }
 
-        public List<string> getSpecificsList()
+        public List<String> SpecificsList
         {
-            return specifics_list_;
+            get { return specifics_list_; }
         }
 
         private int id_;
-        private string email_;
-        private string first_name_;
-        private string last_name_;
-        private string password_;
-        private List<string> specifics_list_;
+        private String email_;
+        private String first_name_;
+        private String last_name_;
+        private String password_;
+        private List<String> specifics_list_;
         private DateTime join_date_;
     }
 }//namespace

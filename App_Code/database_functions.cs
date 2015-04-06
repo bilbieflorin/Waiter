@@ -15,7 +15,7 @@ namespace db_mapping
     {
         // Intoarce lista de preparate din BD, fara sa ia in considerare
         // coloana "data_adaugare".
-        public static List<Preparat> getPreparate(string connection_string)
+        public static List<Preparat> getPreparate(String connection_string)
         {
             List<Preparat> lista_preparate = new List<Preparat>();
             SqlConnection db_connection_preparate = new SqlConnection(connection_string);
@@ -57,13 +57,13 @@ namespace db_mapping
                             from ingrediente join contine on(ingrediente.id_ingredient = contine.id_ingredient)
                             where id_preparat = " + id, db_connection_ingrediente);
 
-                List<string> lista_ingrediente = new List<string>();
+                List<String> lista_ingrediente = new List<String>();
                 SqlDataReader data_reader_ingrediente =
                     fetch_denumire_ingrediente.ExecuteReader();
 
                 while (data_reader_ingrediente.Read())
                 {
-                    string denumire_ingredient = data_reader_ingrediente.GetString(0);
+                    String denumire_ingredient = data_reader_ingrediente.GetString(0);
                     lista_ingrediente.Add(denumire_ingredient);
                 }
 
@@ -80,7 +80,7 @@ namespace db_mapping
             return lista_preparate;
         }
 
-        public static List<User> getUsers(string connection_string)
+        public static List<User> getUsers(String connection_string)
         {
             List<User> lista_users = new List<User>();
             SqlConnection db_connection_user = new SqlConnection(connection_string);
@@ -95,14 +95,14 @@ namespace db_mapping
             while (data_reader_user.Read())
             {
                 int id = data_reader_user.GetInt32(0);
-                string email = data_reader_user.GetString(1);
-                string password = data_reader_user.GetString(2);
-                string first_name = null;
+                String email = data_reader_user.GetString(1);
+                String password = data_reader_user.GetString(2);
+                String first_name = null;
                 if (!data_reader_user.IsDBNull(3))
                 {
                     first_name = data_reader_user.GetString(3);
                 }
-                string last_name = null;
+                String last_name = null;
                 if (!data_reader_user.IsDBNull(4))
                 {
                     last_name = data_reader_user.GetString(4);
@@ -118,7 +118,7 @@ namespace db_mapping
             return lista_users;
         }
 
-        public static void insertUser(User user, string connection_string)
+        public static void insertUser(User user, String connection_string)
         {
             SqlConnection insert_user_connection = new SqlConnection(connection_string);
             insert_user_connection.Open();
@@ -126,26 +126,26 @@ namespace db_mapping
                                             @"insert into users 
                                               values(@email, @parola, @first_name, @last_name, @Date)",
                                               insert_user_connection);
-            insert_user_command.Parameters.Add(new SqlParameter("@email", user.getEmail()));
-            insert_user_command.Parameters.Add(new SqlParameter("@parola", user.getPassword()));
-            if (user.getFirstName() == null)
+            insert_user_command.Parameters.Add(new SqlParameter("@email", user.Email));
+            insert_user_command.Parameters.Add(new SqlParameter("@parola", user.Password));
+            if (user.FirstName == null)
                 insert_user_command.Parameters.Add(new SqlParameter("@first_name", (object)DBNull.Value));
             else
-                insert_user_command.Parameters.Add(new SqlParameter("@first_name", user.getFirstName()));
+                insert_user_command.Parameters.Add(new SqlParameter("@first_name", user.FirstName));
 
-            if (user.getLastName() == null)
+            if (user.LastName == null)
                 insert_user_command.Parameters.Add(new SqlParameter("@last_name", (object)DBNull.Value));
             else
-                insert_user_command.Parameters.Add(new SqlParameter("@last_name", user.getLastName()));
+                insert_user_command.Parameters.Add(new SqlParameter("@last_name", user.LastName));
             insert_user_command.Parameters.Add(new SqlParameter("@date", user.getJoinDate()));
             insert_user_command.ExecuteNonQuery();
             insert_user_connection.Close();
-            int id = getUserIdByEmail(user.getEmail(), connection_string);
-            if (user.getSpecificsList() != null)
-                insertSpecificsForUser(id, user.getSpecificsList(), connection_string);
+            int id = getUserIdByEmail(user.Email, connection_string);
+            if (user.SpecificsList != null)
+                insertSpecificsForUser(id, user.SpecificsList, connection_string);
         }
 
-        public static int getUserIdByEmail(string email, string connection_string)
+        public static int getUserIdByEmail(String email, String connection_string)
         {
             SqlConnection get_user_id_connection = new SqlConnection(connection_string);
             get_user_id_connection.Open();
@@ -163,7 +163,7 @@ namespace db_mapping
             return id;
         }
 
-        public static bool checkEmailIfExist(string email, string connection_string)
+        public static bool checkEmailIfExist(String email, String connection_string)
         {
             SqlConnection get_user_id_connection = new SqlConnection(connection_string);
             get_user_id_connection.Open();
@@ -183,7 +183,7 @@ namespace db_mapping
             return false;
         }
 
-        public static int getSpecificId(string denumire_specific, string connection_string)
+        public static int getSpecificId(String denumire_specific, String connection_string)
         {
             SqlConnection get_user_id_connection = new SqlConnection(connection_string);
             get_user_id_connection.Open();
@@ -201,7 +201,7 @@ namespace db_mapping
             return id;
         }
 
-        private static void insertSpecificsForUser(int id, List<string> specifics_list, string connection_string)
+        private static void insertSpecificsForUser(int id, List<String> specifics_list, String connection_string)
         {
             foreach (string specific in specifics_list)
             {
@@ -217,7 +217,7 @@ namespace db_mapping
             }
         }
 
-        public static User checkEmailAndPasswordIfExists(string email, string password, string conection_string)
+        public static User checkEmailAndPasswordIfExists(String email, String password, String conection_string)
         {
             SqlConnection get_user_connection = new SqlConnection(conection_string);
             get_user_connection.Open();

@@ -22,14 +22,6 @@ namespace db_mapping
             pret_ = preparat_.Pret * cantitate_;
         }
 
-        // Seteaza o cantitate pentru obiectul ItemComanda
-        // si updateaza pretul.
-        public void setCantitate(int cantitate)
-        {
-            cantitate_ = cantitate;
-            pret_ = preparat_.Pret * cantitate_;
-        }
-
         // Returneaza intreg continutul unui obiect de tip ItemComanda
         // sub forma de String. Metoda folosita pentru testare.
         public String toString()
@@ -44,20 +36,28 @@ namespace db_mapping
             return item_comanda;
         }        
 
-        // Getteri.
-        public Preparat getPreparat()
+        //Setteri si getteri.
+        public Preparat Preparat
         {
-            return preparat_;
+            get { return preparat_; }
         }
 
-        public int getCantitate()
+        public int Cantitate
         {
-            return cantitate_;
+            get{ return cantitate_; }
+
+           // Seteaza o cantitate pentru obiectul ItemComanda
+           // si updateaza pretul.
+            set
+            {
+                cantitate_ = value;
+                pret_ = preparat_.Pret * cantitate_;
+            }
         }
 
-        public double getPret()
+        public double Pret
         {
-            return pret_;
+            get { return pret_; }
         }
 
         private Preparat preparat_;
