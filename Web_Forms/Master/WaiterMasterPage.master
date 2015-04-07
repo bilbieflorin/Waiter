@@ -41,7 +41,17 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li id="ComandaHyperLink" runat="server">
-                            <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/User_actions/Comanda.aspx">Comanda mea</asp:HyperLink></li>
+                            <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/User_actions/Comanda.aspx">Comanda mea 
+                               <asp:ScriptManager EnablePartialRendering="true" ID="BadgeScriptManager" runat="server"></asp:ScriptManager>
+                                 <asp:UpdatePanel style="display:inline" UpdateMode="Conditional" ID="BadgeUpdatePanel" runat="server">
+                                    <ContentTemplate>
+                                        <asp:Label ID="Badge" runat="server" data-toggle="tooltip" 
+                                            data-placement="bottom" title="Numarul produselor din comanda" CssClass="badge" 
+                                            style="background:#dd4c53" >0</asp:Label>
+                                    </ContentTemplate>
+                               </asp:UpdatePanel>
+                            </asp:HyperLink>
+                        </li>
                         <li id="ContactHyperLink" runat="server">
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/User_actions/Contact.aspx">Contact</asp:HyperLink></li>
                         <li id="LogoutHyperLink" runat="server" visible="false">

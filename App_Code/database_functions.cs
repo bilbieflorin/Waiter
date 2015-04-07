@@ -201,22 +201,6 @@ namespace db_mapping
             return id;
         }
 
-        private static void insertSpecificsForUser(int id, List<String> specifics_list, String connection_string)
-        {
-            foreach (string specific in specifics_list)
-            {
-                SqlConnection insert_specifics_for_user_connection = new SqlConnection(connection_string);
-                insert_specifics_for_user_connection.Open();
-                SqlCommand insert_specifics_for_user_command = new SqlCommand(
-                    @"insert into prefera values(@user, @specific)",
-                    insert_specifics_for_user_connection);
-                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@user", id));
-                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@specific", getSpecificId(specific, connection_string)));
-                insert_specifics_for_user_command.ExecuteNonQuery();
-                insert_specifics_for_user_connection.Close();
-            }
-        }
-
         public static User checkEmailAndPasswordIfExists(String email, String password, String conection_string)
         {
             SqlConnection get_user_connection = new SqlConnection(conection_string);
@@ -247,5 +231,58 @@ namespace db_mapping
             return user;
         }
 
+        public static void trimiteComanda(Comanda comanda, String connection_string)
+        {
+            SqlConnection inserare_comanda_connection = new SqlConnection(connection_string);
+            inserare_comanda_connection.Open();
+            SqlCommand inserare_comanda_command = new SqlCommand(
+                    @"insert into comenzi output inserted.id_comanda values(@data,@id_user,@valoare)",
+                            inserare_comanda_connection);
+            inserare_comanda_command.Parameters.Add(new SqlParameter("@data", DateTime.Now));
+            if(comanda.IdUser!=0)
+                inserare_comanda_command.Parameters.Add(new SqlParameter("@id_user", comanda.IdUser));
+            else
+                inserare_comanda_command.Parameters.Add(new SqlParameter("@id_user", (object)DBNull.Value));
+            inserare_comanda_command.Parameters.Add(new SqlParameter("@valoare", comanda.Pret));
+            int id_comanda = (int)inserare_comanda_command.ExecuteScalar();
+            inserare_comanda_connection.Close();
+            inserareItemComanda(comanda.ListaItem, id_comanda, connection_string);
+        }
+        
+        private static void insertSpecificsForUser(int id, List<String> specifics_list, String connection_string)
+        {
+            foreach (string specific in specifics_list)
+            {
+                SqlConnection insert_specifics_for_user_connection = new SqlConnection(connection_string);
+                insert_specifics_for_user_connection.Open();
+                SqlCommand insert_specifics_for_user_command = new SqlCommand(
+                    @"insert into prefera values(@user, @specific)",
+                    insert_specifics_for_user_connection);
+                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@user", id));
+                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@specific", getSpecificId(specific, connection_string)));
+                insert_specifics_for_user_command.ExecuteNonQuery();
+                insert_specifics_for_user_connection.Close();
+            }
+        }
+
+        private static void inserareItemComanda(Hashtable lista_item,int id_comanda, String connection_string)
+        { 
+            foreach(DictionaryEntry item in lista_item)
+            {
+                ItemComanda item_comanda = item.Value as ItemComanda;
+                SqlConnection inserare_item_connection = new SqlConnection(connection_string);
+                inserare_item_connection.Open();
+                SqlCommand inserare_item_command = new SqlCommand(
+                        @"insert into preparate_comanda
+                          values( @id_comanda, @id_preparat, @cantitate)",
+                        inserare_item_connection);
+                inserare_item_command.Parameters.Add(new SqlParameter("@id_comanda",id_comanda));
+                inserare_item_command.Parameters.Add(new SqlParameter("@id_preparat", item_comanda.Preparat.Id));
+                inserare_item_command.Parameters.Add(new SqlParameter("@cantitate", item_comanda.Cantitate));
+                inserare_item_command.ExecuteNonQuery();
+                inserare_item_connection.Close();
+            }
+        }
+    
     }
 } // namespace

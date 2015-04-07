@@ -18,6 +18,7 @@ namespace db_mapping
         {
             lista_item_comanda_ = new Hashtable();
             pret_ = 0;
+            numar_preparate_ = 0;
         }
 
         // Returneaza intreg continutul unui obiect de tip Comanda
@@ -44,6 +45,7 @@ namespace db_mapping
         public void addItemComanda(ItemComanda item_comanda)
         {
             pret_ += item_comanda.Pret;
+            numar_preparate_ += item_comanda.Cantitate;
             if (lista_item_comanda_.ContainsKey(item_comanda.Preparat.Id))
             {
                 ItemComanda item = lista_item_comanda_[item_comanda.Preparat.Id] as ItemComanda;
@@ -55,6 +57,13 @@ namespace db_mapping
             {
                 lista_item_comanda_.Add(item_comanda.Preparat.Id, item_comanda);
             }
+        }
+
+        public void removeItemComanda(ItemComanda item)
+        {
+            lista_item_comanda_.Remove(item.Preparat.Id);
+            pret_ -= item.Pret;
+            numar_preparate_ -= item.Cantitate;
         }
 
         // Setteri si getteri.
@@ -80,9 +89,17 @@ namespace db_mapping
             get { return lista_item_comanda_; }
         }
 
+        public int NumarPreparate
+        {
+            get { return numar_preparate_; }
+            set { numar_preparate_ = value; }
+        }
+
         private Hashtable lista_item_comanda_;
         private double pret_;
         private DateTime date_time_;
+        private int numar_preparate_;
         private int id_user_;
+
     }
 } // namespace

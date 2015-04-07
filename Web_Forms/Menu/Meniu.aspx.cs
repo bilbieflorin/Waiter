@@ -26,14 +26,7 @@ public partial class Meniu : System.Web.UI.Page
         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "", "$('.nbsp').each(function() {$(this).before($('<span>').html('&nbsp;')); $(this).after($('<span>').html('&nbsp;'));});", true);
     }
 
-    protected void MeniuListView_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
-    {
-        // Set current page startindex, max rows and rebind to false/
-        MeniuDataPager.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
-
-        // Rebind List View
-        bindMeniuListViewData();
-    }
+   
 
     private string connection_string_;
     private static List<Preparat> meniu_;
@@ -91,6 +84,19 @@ public partial class Meniu : System.Web.UI.Page
         comanda.addItemComanda(item);
         Session["comanda"] = comanda;
         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal('hide')", true);
+        Label badge = Master.FindControl("Badge") as Label;
+        UpdatePanel update_badge = Master.FindControl("BadgeUpdatePanel") as UpdatePanel;
+        badge.Text = comanda.NumarPreparate + "";
+        update_badge.Update();
+    }
+
+    protected void meniuListViewPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+    {
+        // Set current page startindex, max rows and rebind to false/
+        MeniuDataPager.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+
+        // Rebind List View
+        bindMeniuListViewData();
     }
 
     private void bindMeniuListViewData()

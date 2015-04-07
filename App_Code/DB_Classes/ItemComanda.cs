@@ -34,8 +34,25 @@ namespace db_mapping
             item_comanda += "Pret item comanda = " + pret_ + new_line;
 
             return item_comanda;
-        }        
+        }
 
+        //Mareste cantitatea in care se afla preparatul cu 1
+        public void maresteCantitate()
+        {
+            cantitate_ ++;
+            pret_ = cantitate_ * preparat_.Pret; 
+        }
+
+        //Scade cantitatea in care se afla preparatul cu 1 daca e mai mare ca 0
+        public void scadeCantitate()
+        {
+            if (cantitate_ > 1)
+            {
+                cantitate_--;
+                pret_ = cantitate_ * preparat_.Pret;
+            }
+        }
+        
         //Setteri si getteri.
         public Preparat Preparat
         {
