@@ -150,7 +150,7 @@ namespace db_mapping
             SqlConnection insert_user_connection = new SqlConnection(connection_string);
             insert_user_connection.Open();
             SqlCommand insert_user_command = new SqlCommand(
-                                            @"insert into users (email, password, first_name, last_name, join_date)
+                                            @"insert into users 
                                               values(@email, @parola, @first_name, @last_name, @Date)",
                                               insert_user_connection);
             insert_user_command.Parameters.Add(new SqlParameter("@email", user.Email));

@@ -25,7 +25,6 @@
                                     <span class="glyphicon glyphicon-remove"></span>
                                     </asp:LinkButton>
                                     <%#Eval("Preparat.Denumire")%>
-                                     <span class="pull-right" style="font-weight:bold"><%#Eval("Pret")%> RON&nbsp;&nbsp;&nbsp;</span>
                                     <span style="display: block">
                                         <asp:LinkButton runat="server"
                                             ID="DeletePreparat"

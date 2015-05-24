@@ -103,7 +103,7 @@ namespace db_mapping
         private String first_name_;
         private String last_name_;
         private String password_;
-                private String type_;
+        private String type_;
         private List<String> specifics_list_;
         private DateTime join_date_;
     }
