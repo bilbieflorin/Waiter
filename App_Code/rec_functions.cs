@@ -6,7 +6,7 @@ using System.Web;
 using db_mapping;
 
 /// <summary>
-/// Summary description for rec_functions
+/// Clasa de functii pentru sistemul de recomandari.
 /// </summary>
 ///
 
@@ -25,47 +25,45 @@ namespace rec_system
 
         public int[] Calculeaza_vecini(int k, int id_user)
         {
-            int[] vecini = new int[k + 1];
-            Dictionary<int, int[]> signatures = FlorinMagicDinBD();
+            // Extragem din DB un Dictionary de toate id utilizator, lista de preparate
+            // comandate.
+            Dictionary<int, List<int>> toatePrep = DatabaseFunctions.
+                preparateComandateDupaUtilizator();
+            Dictionary<int, int[]> signatures = new Dictionary<int, int[]>();
+
+            foreach (KeyValuePair<int, List<int>> entry in toatePrep)
+            {
+                signatures.Add(entry.Key, entry.Value.ToArray());
+            }
 
             // Extragem vectorul specific clientului cu id-ul id_user.
             int[] query;
             signatures.TryGetValue(id_user, out query);
             signatures.Remove(id_user);
 
-            //Now create a MinHasher object to minhash each of the documents created above
-            //using 300 unique hashing functions.
+            // Cream un obiect MinHasher cu 400 functii hash.
             MinHasher minHasher = new MinHasher(400);
-            Dictionary<int, int[]> docMinhashes = minHasher.createMinhashCollection(
-                numDocCreator.documentCollection);
-            //Create the test doc minhash signature
+            // Calculam signatura minHash a query-ului.
             int[] queryMinhashSignature = minHasher.getMinHashSignature(query);
 
-            Dictionary<int, double> results = new Dictionary<int,double>();
-            // double minhashCount = queryMinhashSignature.Length;
-
-            //Compare the test document minhash signature to all minhash signatures  
-            //in our document collection using Jaccard similarity 
-            Console.WriteLine("Jaccard Similarity for each Minhashed collection:");
+            Dictionary<int, double> results = new Dictionary<int, double>();
+            // Calculam similaritatea Jaccard folosind signatura minHash a tuturor 
+            // utilizatorilor.
             foreach (KeyValuePair<int, int[]> signatures_entry in signatures)
             {
-               // sw.Restart();
                 double jaccard = MinHasher.calculateJaccard(queryMinhashSignature,
                     signatures_entry.Value);
                 results.Add(signatures_entry.Key, jaccard);
-              //  sw.Stop();
-                Console.WriteLine("Document " + signatures_entry.Key.ToString() + ": " +
-                    jaccard.ToString() + "     Time (Ticks = 10k ms per tick):" + 
-                    sw.ElapsedTicks);
-              //  minhashCount += document.Value.Length;
             }
 
+            int[] vecini = new int[k + 1];
             for (int index = 0; index < k; index++)
             {
                 vecini[index] = results.MinBy(x => x.Value).Key;
                 results.Remove(vecini[index]);
             }
 
+            return vecini;
 
         }
     }
