@@ -14,7 +14,7 @@ namespace rec_system
 {
     public class RecFunctions
     {
-        public List<Preparat> Gaseste_recomandari(int id_user, Comanda comanda)
+        public static List<Preparat> Gaseste_recomandari(int id_user, Comanda comanda)
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
             int[] lista_vecini = Calculeaza_vecini(3, id_user);
@@ -23,7 +23,7 @@ namespace rec_system
             return recomandari;
         }
 
-        public int[] Calculeaza_vecini(int k, int id_user)
+        public static int[] Calculeaza_vecini(int k, int id_user)
         {
             // Extragem din DB un Dictionary de toate id utilizator, lista de preparate
             // comandate.
@@ -33,7 +33,10 @@ namespace rec_system
 
             foreach (KeyValuePair<int, List<int>> entry in toatePrep)
             {
-                signatures.Add(entry.Key, entry.Value.ToArray());
+                if (entry.Value.Count > 0)
+                {
+                    signatures.Add(entry.Key, entry.Value.ToArray());
+                }
             }
 
             // Extragem vectorul specific clientului cu id-ul id_user.

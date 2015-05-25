@@ -9,6 +9,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using db_mapping;
+using rec_system;
 
 public partial class Test : System.Web.UI.Page
 {
@@ -41,6 +42,8 @@ public partial class Test : System.Web.UI.Page
         //show_content.Controls.Add(label2);
         //label.Text = sha256("1234");
         //label2.Text = sha256("123456789");
+
+        /*
         Dictionary<int, List<int>> dict = DatabaseFunctions.preparateComandateDupaUtilizator();
         foreach (KeyValuePair<int,List<int>> d in dict)
         {
@@ -50,6 +53,19 @@ public partial class Test : System.Web.UI.Page
             {
                 label.Text+=i+" ";
             }
+            HtmlGenericControl br = new HtmlGenericControl("br");
+            show_content.Controls.Add(label);
+            show_content.Controls.Add(br);
+        }
+         * */
+
+        int[] vecini = new int[50];
+        vecini = RecFunctions.Calculeaza_vecini(3, 29);
+
+        foreach (int vecin in vecini)
+        {
+            Label label = new Label();
+            label.Text += vecin + " ";
             HtmlGenericControl br = new HtmlGenericControl("br");
             show_content.Controls.Add(label);
             show_content.Controls.Add(br);
