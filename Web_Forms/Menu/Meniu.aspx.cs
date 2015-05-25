@@ -13,23 +13,17 @@ public partial class Meniu : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString; 
-
         HtmlGenericControl meniu = (HtmlGenericControl)Master.FindControl("MeniuHyperLink");
         meniu.Attributes["class"] += "active";
 
         if (!IsPostBack)
         {
-            meniu_ = DatabaseFunctions.getPreparate(connection_string_);
+            meniu_ = DatabaseFunctions.getPreparate();
             bindMeniuListViewData();
         }
         ScriptManager.RegisterStartupScript(Page, Page.GetType(), "", "$('.nbsp').each(function() {$(this).before($('<span>').html('&nbsp;')); $(this).after($('<span>').html('&nbsp;'));});", true);
     }
 
-   
-
-    private string connection_string_;
-    private static List<Preparat> meniu_;
 
     protected void meniuListItemImagineClick(object sender, ImageClickEventArgs e)
     {
@@ -98,6 +92,8 @@ public partial class Meniu : System.Web.UI.Page
         // Rebind List View
         bindMeniuListViewData();
     }
+
+    private static List<Preparat> meniu_;
 
     private void bindMeniuListViewData()
     {

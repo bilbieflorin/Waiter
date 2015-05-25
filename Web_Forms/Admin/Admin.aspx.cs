@@ -12,8 +12,6 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-
         User user = Session["user"] as User;
         if (user == null || !user.Type.Equals("ADMIN"))
         {
@@ -22,7 +20,7 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            ingrediente_ = DatabaseFunctions.getIngrediente(connection_string_);
+            ingrediente_ = DatabaseFunctions.getIngrediente();
 
             ingredienteAdaugate_ = new List<Ingredient>();
             denumiriIngrediente_ = new List<String>();
@@ -228,17 +226,17 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
                 specific,
                 null,
                 DateTime.Now);
-            int id = DatabaseFunctions.insertPreparat(preparat, connection_string_);
+            int id = DatabaseFunctions.insertPreparat(preparat);
 
             foreach (Ingredient ingredient in ingredienteAdaugate_)
             {
                 if (ingredient.IsNew)
                 {
-                    int id_ingredient = DatabaseFunctions.insertIngredient(ingredient, connection_string_);
+                    int id_ingredient = DatabaseFunctions.insertIngredient(ingredient);
                     ingredient.Initialize(id_ingredient, ingredient.Denumire);
                 }
 
-                DatabaseFunctions.insertPreparatContineIngredient(id, ingredient.Id, connection_string_);
+                DatabaseFunctions.insertPreparatContineIngredient(id, ingredient.Id);
             }
 
             Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
@@ -246,7 +244,6 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
         
     }
 
-    private String connection_string_;
     private static List<Ingredient> ingrediente_;
     private static List<String> denumiriIngrediente_;
     private static List<Ingredient> ingredienteAdaugate_;

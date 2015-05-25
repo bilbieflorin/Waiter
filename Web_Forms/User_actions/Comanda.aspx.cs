@@ -18,7 +18,6 @@ public partial class ComandaWebPage : System.Web.UI.Page
         badge.Attributes["style"] = "background: #cf262e;";
         comandaHyperLink.Attributes["class"] += "active";
         bindComandaListView();
-        connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
     }
 
     protected void deleteItemComanda(object sender, EventArgs e)
@@ -67,7 +66,7 @@ public partial class ComandaWebPage : System.Web.UI.Page
         Comanda comanda = Session["comanda"] as Comanda;
         if (comanda != null)
         {
-            DatabaseFunctions.trimiteComanda(comanda, connection_string_);
+            DatabaseFunctions.trimiteComanda(comanda);
             Session["comanda"] = null;
             FormularComanda.Visible = false;
             StatusComanda.Visible = true;
@@ -76,8 +75,6 @@ public partial class ComandaWebPage : System.Web.UI.Page
         else
             Response.Redirect(Request.RawUrl);
     }
-
-    private String connection_string_;
 
     private void updateBadge()
     {

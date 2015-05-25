@@ -15,16 +15,32 @@ namespace db_mapping
     {
         // Intoarce lista de preparate din BD, fara sa ia in considerare
         // coloana "data_adaugare".
-        public static List<Preparat> getPreparate(String connection_string)
+        public static List<Preparat> getPreparate()
         {
             List<Preparat> lista_preparate = new List<Preparat>();
-            SqlConnection db_connection_preparate = new SqlConnection(connection_string);
+            SqlConnection db_connection_preparate = new SqlConnection(connection_string_);
 
             db_connection_preparate.Open();
             SqlCommand fetch_preparate = new SqlCommand(
                     @"select id_preparat, denumire_preparat, tip_preparat, path, gramaj, pret, denumire_specific
                       from preparate join specific on (
-                      preparate.id_specific = specific.id_specific)",
+                      preparate.id_specific = specific.id_specific)
+                      order by case tip_preparat
+                            when 'Mic dejun' then 1
+                            when 'Pizza' then 2
+                            when 'Paste' then 3
+                            when 'Aperitiv' then 4
+                            when 'Ciorba si supe' then 5
+                            when 'Fructe de mare' then 6
+                            when 'Peste' then 7
+                            when 'Preparate din carne de pui' then 8
+                            when 'Preparate din carne de porc' then 9
+                            when 'Preparate din carne de vita' then 10
+                            when 'Preparate din vanat' then 11
+                            when 'Salate' then 12
+                            when 'Desert' then 13
+                            when 'Bauturi' then 14
+                        end",
                       db_connection_preparate);
 
             SqlDataReader data_reader_preparate = fetch_preparate.ExecuteReader();
@@ -49,7 +65,7 @@ namespace db_mapping
                     specific = data_reader_preparate.GetString(6);
                 }
 
-                SqlConnection db_connection_ingrediente = new SqlConnection(connection_string);
+                SqlConnection db_connection_ingrediente = new SqlConnection(connection_string_);
 
                 db_connection_ingrediente.Open();
                 SqlCommand fetch_denumire_ingrediente = new SqlCommand(
@@ -69,7 +85,7 @@ namespace db_mapping
 
                 data_reader_ingrediente.Close();
                 db_connection_ingrediente.Close();
-                
+
                 Preparat preparat = new Preparat();
                 preparat.Initialize(id, denumire, tip, pret, path, gramaj, specific,
                     lista_ingrediente);
@@ -80,10 +96,10 @@ namespace db_mapping
             return lista_preparate;
         }
 
-        public static List<Ingredient> getIngrediente(String connection_string)
+        public static List<Ingredient> getIngrediente()
         {
             List<Ingredient> lista_ingrediente = new List<Ingredient>();
-            SqlConnection db_connection_ingrediente = new SqlConnection(connection_string);
+            SqlConnection db_connection_ingrediente = new SqlConnection(connection_string_);
             db_connection_ingrediente.Open();
 
             SqlCommand fetch_ingrediente = new SqlCommand(@"select id_ingredient, denumire
@@ -106,10 +122,10 @@ namespace db_mapping
             return lista_ingrediente;
         }
 
-        public static List<User> getUsers(String connection_string)
+        public static List<User> getUsers()
         {
             List<User> lista_users = new List<User>();
-            SqlConnection db_connection_user = new SqlConnection(connection_string);
+            SqlConnection db_connection_user = new SqlConnection(connection_string_);
             db_connection_user.Open();
 
             SqlCommand fatch_users = new SqlCommand(@"select id_user, email, password, first_name, last_name, join_date, type 
@@ -145,9 +161,9 @@ namespace db_mapping
             return lista_users;
         }
 
-        public static void insertUser(User user, String connection_string)
+        public static void insertUser(User user)
         {
-            SqlConnection insert_user_connection = new SqlConnection(connection_string);
+            SqlConnection insert_user_connection = new SqlConnection(connection_string_);
             insert_user_connection.Open();
             SqlCommand insert_user_command = new SqlCommand(
                                             @"insert into users (email, password, first_name, last_name, join_date)
@@ -167,18 +183,18 @@ namespace db_mapping
             insert_user_command.Parameters.Add(new SqlParameter("@date", user.JoinDate));
             insert_user_command.ExecuteNonQuery();
             insert_user_connection.Close();
-            int id = getUserIdByEmail(user.Email, connection_string);
+            int id = getUserIdByEmail(user.Email);
             if (user.SpecificsList != null)
-                insertSpecificsForUser(id, user.SpecificsList, connection_string);
+                insertSpecificsForUser(id, user.SpecificsList);
         }
 
-        public static int insertIngredient(Ingredient ingredient, string connection_string)
+        public static int insertIngredient(Ingredient ingredient)
         {
-            SqlConnection insert_ingredient_connection = new SqlConnection(connection_string);
+            SqlConnection insert_ingredient_connection = new SqlConnection(connection_string_);
             insert_ingredient_connection.Open();
 
             SqlCommand insert_ingredient_command = new SqlCommand(
-                                           @"insert into ingrediente values(@denumire); SELECT SCOPE_IDENTITY();", 
+                                           @"insert into ingrediente values(@denumire); SELECT SCOPE_IDENTITY();",
                                            insert_ingredient_connection);
             insert_ingredient_command.Parameters.Add(new SqlParameter(@"denumire", ingredient.Denumire));
 
@@ -188,9 +204,9 @@ namespace db_mapping
             return id_ingredient;
         }
 
-        public static void insertPreparatContineIngredient(int id_preparat, int id_ingredient, string connection_string)
+        public static void insertPreparatContineIngredient(int id_preparat, int id_ingredient)
         {
-            SqlConnection insert_contine_connection = new SqlConnection(connection_string);
+            SqlConnection insert_contine_connection = new SqlConnection(connection_string_);
             insert_contine_connection.Open();
 
             SqlCommand insert_contine_command = new SqlCommand(
@@ -202,11 +218,11 @@ namespace db_mapping
             insert_contine_connection.Close();
         }
 
-        public static int insertPreparat(Preparat preparat, String connection_string)
+        public static int insertPreparat(Preparat preparat)
         {
-            SqlConnection insert_preparat_connection = new SqlConnection(connection_string);
+            SqlConnection insert_preparat_connection = new SqlConnection(connection_string_);
             insert_preparat_connection.Open();
-            SqlCommand insert_preparat_command = new SqlCommand("insert into preparate values(@denumire_preparat, @path, @tip_preparat, @gramaj, @pret, @id_specific, @data_adaugare); SELECT SCOPE_IDENTITY();", 
+            SqlCommand insert_preparat_command = new SqlCommand("insert into preparate values(@denumire_preparat, @path, @tip_preparat, @gramaj, @pret, @id_specific, @data_adaugare); SELECT SCOPE_IDENTITY();",
                                                                 insert_preparat_connection);
             insert_preparat_command.Parameters.Add(new SqlParameter(@"denumire_preparat", preparat.Denumire));
             if (preparat.PathImagine == null)
@@ -216,7 +232,7 @@ namespace db_mapping
             insert_preparat_command.Parameters.Add(new SqlParameter(@"tip_preparat", preparat.Tip));
             insert_preparat_command.Parameters.Add(new SqlParameter(@"gramaj", preparat.Gramaj));
             insert_preparat_command.Parameters.Add(new SqlParameter(@"pret", preparat.Pret));
-            insert_preparat_command.Parameters.Add(new SqlParameter(@"id_specific", getSpecificId(preparat.Specific, connection_string)));
+            insert_preparat_command.Parameters.Add(new SqlParameter(@"id_specific", getSpecificId(preparat.Specific)));
             insert_preparat_command.Parameters.Add(new SqlParameter(@"data_adaugare", preparat.DataAdaugare));
 
             int id_preparat = Convert.ToInt32(insert_preparat_command.ExecuteScalar());
@@ -225,9 +241,9 @@ namespace db_mapping
             return id_preparat;
         }
 
-        public static int getUserIdByEmail(String email, String connection_string)
+        public static int getUserIdByEmail(String email)
         {
-            SqlConnection get_user_id_connection = new SqlConnection(connection_string);
+            SqlConnection get_user_id_connection = new SqlConnection(connection_string_);
             get_user_id_connection.Open();
             SqlCommand get_user_id_command = new SqlCommand(
                         @"select id_user
@@ -243,9 +259,9 @@ namespace db_mapping
             return id;
         }
 
-        public static bool checkEmailIfExist(String email, String connection_string)
+        public static bool checkEmailIfExist(String email)
         {
-            SqlConnection get_user_id_connection = new SqlConnection(connection_string);
+            SqlConnection get_user_id_connection = new SqlConnection(connection_string_);
             get_user_id_connection.Open();
             SqlCommand get_user_id_command = new SqlCommand(
                         @"select count(*)
@@ -263,9 +279,9 @@ namespace db_mapping
             return false;
         }
 
-        public static int getSpecificId(String denumire_specific, String connection_string)
+        public static int getSpecificId(String denumire_specific)
         {
-            SqlConnection get_user_id_connection = new SqlConnection(connection_string);
+            SqlConnection get_user_id_connection = new SqlConnection(connection_string_);
             get_user_id_connection.Open();
             SqlCommand get_user_id_command = new SqlCommand(
                         @"select id_specific
@@ -281,9 +297,9 @@ namespace db_mapping
             return id;
         }
 
-        public static User checkEmailAndPasswordIfExists(String email, String password, String conection_string)
+        public static User checkEmailAndPasswordIfExists(String email, String password)
         {
-            SqlConnection get_user_connection = new SqlConnection(conection_string);
+            SqlConnection get_user_connection = new SqlConnection(connection_string_);
             get_user_connection.Open();
 
             SqlCommand get_user_connection_command = new SqlCommand(@"select *
@@ -312,58 +328,80 @@ namespace db_mapping
             return user;
         }
 
-        public static void trimiteComanda(Comanda comanda, String connection_string)
+        public static void trimiteComanda(Comanda comanda)
         {
-            SqlConnection inserare_comanda_connection = new SqlConnection(connection_string);
+            SqlConnection inserare_comanda_connection = new SqlConnection(connection_string_);
             inserare_comanda_connection.Open();
             SqlCommand inserare_comanda_command = new SqlCommand(
                     @"insert into comenzi output inserted.id_comanda values(@data,@id_user,@valoare)",
                             inserare_comanda_connection);
             inserare_comanda_command.Parameters.Add(new SqlParameter("@data", DateTime.Now));
-            if(comanda.IdUser!=0)
+            if (comanda.IdUser != 0)
                 inserare_comanda_command.Parameters.Add(new SqlParameter("@id_user", comanda.IdUser));
             else
                 inserare_comanda_command.Parameters.Add(new SqlParameter("@id_user", (object)DBNull.Value));
             inserare_comanda_command.Parameters.Add(new SqlParameter("@valoare", comanda.Pret));
             int id_comanda = (int)inserare_comanda_command.ExecuteScalar();
             inserare_comanda_connection.Close();
-            inserareItemComanda(comanda.ListaItem, id_comanda, connection_string);
+            inserareItemComanda(comanda.ListaItem, id_comanda);
         }
-        
-        private static void insertSpecificsForUser(int id, List<String> specifics_list, String connection_string)
+
+        public static int[] preparateComandate(int id_user)
+        {
+            SqlConnection preparate_comandate_connection = new SqlConnection(connection_string_);
+            preparate_comandate_connection.Open();
+            SqlCommand preparate_comandate_command = new SqlCommand(
+                @"select distinct id_preparat
+                  from frecvente
+                  where id_user = @user", preparate_comandate_connection);
+            preparate_comandate_command.Parameters.Add(new SqlParameter("@user", id_user));
+            SqlDataReader preparate_comandate_reader = preparate_comandate_command.ExecuteReader();
+            List<int> lista_id_preparate = new List<int>();
+            while (preparate_comandate_reader.Read())
+            {
+                int id_preparat = preparate_comandate_reader.GetInt32(0);
+                lista_id_preparate.Add(id_preparat);
+            }
+            preparate_comandate_reader.Close();
+            preparate_comandate_connection.Close();
+            return lista_id_preparate.ToArray();
+        }
+
+        private static String connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+        private static void insertSpecificsForUser(int id, List<String> specifics_list)
         {
             foreach (string specific in specifics_list)
             {
-                SqlConnection insert_specifics_for_user_connection = new SqlConnection(connection_string);
+                SqlConnection insert_specifics_for_user_connection = new SqlConnection(connection_string_);
                 insert_specifics_for_user_connection.Open();
                 SqlCommand insert_specifics_for_user_command = new SqlCommand(
                     @"insert into prefera values(@user, @specific)",
                     insert_specifics_for_user_connection);
                 insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@user", id));
-                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@specific", getSpecificId(specific, connection_string)));
+                insert_specifics_for_user_command.Parameters.Add(new SqlParameter("@specific", getSpecificId(specific)));
                 insert_specifics_for_user_command.ExecuteNonQuery();
                 insert_specifics_for_user_connection.Close();
             }
         }
 
-        private static void inserareItemComanda(Hashtable lista_item,int id_comanda, String connection_string)
-        { 
-            foreach(DictionaryEntry item in lista_item)
+        private static void inserareItemComanda(Hashtable lista_item, int id_comanda)
+        {
+            foreach (DictionaryEntry item in lista_item)
             {
                 ItemComanda item_comanda = item.Value as ItemComanda;
-                SqlConnection inserare_item_connection = new SqlConnection(connection_string);
+                SqlConnection inserare_item_connection = new SqlConnection(connection_string_);
                 inserare_item_connection.Open();
                 SqlCommand inserare_item_command = new SqlCommand(
                         @"insert into preparate_comanda
                           values( @id_comanda, @id_preparat, @cantitate)",
                         inserare_item_connection);
-                inserare_item_command.Parameters.Add(new SqlParameter("@id_comanda",id_comanda));
+                inserare_item_command.Parameters.Add(new SqlParameter("@id_comanda", id_comanda));
                 inserare_item_command.Parameters.Add(new SqlParameter("@id_preparat", item_comanda.Preparat.Id));
                 inserare_item_command.Parameters.Add(new SqlParameter("@cantitate", item_comanda.Cantitate));
                 inserare_item_command.ExecuteNonQuery();
                 inserare_item_connection.Close();
             }
         }
-    
     }
 } // namespace

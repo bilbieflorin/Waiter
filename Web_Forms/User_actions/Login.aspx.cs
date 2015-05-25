@@ -14,7 +14,6 @@ public partial class Web_Forms_User_actions_Login : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         status.Visible = false;
     }
 
@@ -67,7 +66,7 @@ public partial class Web_Forms_User_actions_Login : System.Web.UI.Page
         Page.Validate();
         if (Page.IsValid)
         {
-            User user = DatabaseFunctions.checkEmailAndPasswordIfExists(EmailTextBox.Text,sha256(PasswordTextBox.Text),connection_string_);
+            User user = DatabaseFunctions.checkEmailAndPasswordIfExists(EmailTextBox.Text,sha256(PasswordTextBox.Text));
             if (user.isInitialized())
             {
                 Session["user"] = user;
@@ -77,8 +76,6 @@ public partial class Web_Forms_User_actions_Login : System.Web.UI.Page
                 status.Visible = true;
         }
     }
-
-    private string connection_string_;
 
     private string sha256(string password)
     {

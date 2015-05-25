@@ -13,8 +13,6 @@ public partial class Test : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        String ConnectionString = System.Web.Configuration.WebConfigurationManager.
-            ConnectionStrings["ConnectionString"].ConnectionString;
 
         //List<Preparat> lista_preparate = DatabaseFunctions.getPreparate(ConnectionString);
         //foreach (Preparat preparat in lista_preparate)

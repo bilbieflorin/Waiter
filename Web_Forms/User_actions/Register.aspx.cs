@@ -14,7 +14,6 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
         if (IsPostBack)
         {
             PasswordTextBox.Attributes.Add("value", PasswordTextBox.Text);
@@ -25,7 +24,7 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
     protected void emailServerValidate(object source, ServerValidateEventArgs args)
     {
         Regex email_regular_expression = new Regex(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
-        if (email_regular_expression.IsMatch(args.Value) && args.Value.Length > 0 && !DatabaseFunctions.checkEmailIfExist(args.Value,connection_string_))
+        if (email_regular_expression.IsMatch(args.Value) && args.Value.Length > 0 && !DatabaseFunctions.checkEmailIfExist(args.Value))
         {
             args.IsValid = true;
             emailformgroup.Attributes["class"] = "form-group";
@@ -112,9 +111,9 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
                 DateTime.Now,
                 "CLIENT",
                 specifics_list);
-            DatabaseFunctions.insertUser(user, connection_string_);
+            DatabaseFunctions.insertUser(user);
             user.Initialize(
-                DatabaseFunctions.getUserIdByEmail(email,connection_string_), 
+                DatabaseFunctions.getUserIdByEmail(email), 
                 email, 
                 password, 
                 first_name, 
@@ -126,8 +125,6 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
             Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
         }
     }
-
-    private string connection_string_;
 
     private string sha256(string password)
     {
