@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LSH_Blog_Examples
+namespace rec_system
 {
     class MinHasher
     {
