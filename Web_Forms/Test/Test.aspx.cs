@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -33,12 +34,26 @@ public partial class Test : System.Web.UI.Page
         //    show_content.Controls.Add(continut_users);
         //    show_content.Controls.Add(br);
         //}
-        Label label = new Label(), label2 = new Label();
-        show_content.Controls.Add(label);
-        show_content.Controls.Add(new HtmlGenericControl("br"));
-        show_content.Controls.Add(label2);
-        label.Text = sha256("1234");
-        label2.Text = sha256("123456789");
+        
+        //    , label2 = new Label();
+        //show_content.Controls.Add(label);
+        //show_content.Controls.Add(new HtmlGenericControl("br"));
+        //show_content.Controls.Add(label2);
+        //label.Text = sha256("1234");
+        //label2.Text = sha256("123456789");
+        Dictionary<int, List<int>> dict = DatabaseFunctions.preparateComandateDupaUtilizator();
+        foreach (KeyValuePair<int,List<int>> d in dict)
+        {
+            Label label = new Label();
+            label.Text+=d.Key+": ";
+            foreach (int i in d.Value)
+            {
+                label.Text+=i+" ";
+            }
+            HtmlGenericControl br = new HtmlGenericControl("br");
+            show_content.Controls.Add(label);
+            show_content.Controls.Add(br);
+        }
     }
 
      private string sha256(string password)

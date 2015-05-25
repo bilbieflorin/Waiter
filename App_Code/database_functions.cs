@@ -346,25 +346,29 @@ namespace db_mapping
             inserareItemComanda(comanda.ListaItem, id_comanda);
         }
 
-        public static int[] preparateComandate(int id_user)
+        public static Dictionary<int,List<int>> preparateComandateDupaUtilizator()
         {
+            List<User> users = getUsers();
+            Dictionary<int, List<int>> dictionar = new Dictionary<int, List<int>>();
+            foreach (User user in users)
+            {
+                dictionar.Add(user.Id, new List<int>());
+            }
             SqlConnection preparate_comandate_connection = new SqlConnection(connection_string_);
             preparate_comandate_connection.Open();
             SqlCommand preparate_comandate_command = new SqlCommand(
-                @"select distinct id_preparat
-                  from frecvente
-                  where id_user = @user", preparate_comandate_connection);
-            preparate_comandate_command.Parameters.Add(new SqlParameter("@user", id_user));
+                @"select id_user, id_preparat
+                  from frecvente", preparate_comandate_connection);
             SqlDataReader preparate_comandate_reader = preparate_comandate_command.ExecuteReader();
-            List<int> lista_id_preparate = new List<int>();
             while (preparate_comandate_reader.Read())
             {
-                int id_preparat = preparate_comandate_reader.GetInt32(0);
-                lista_id_preparate.Add(id_preparat);
+                int id_user = preparate_comandate_reader.GetInt32(0);
+                int id_preparat = preparate_comandate_reader.GetInt32(1);
+                dictionar[id_user].Add(id_preparat);
             }
             preparate_comandate_reader.Close();
             preparate_comandate_connection.Close();
-            return lista_id_preparate.ToArray();
+            return dictionar;
         }
 
         private static String connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
