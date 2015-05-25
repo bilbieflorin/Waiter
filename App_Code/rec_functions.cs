@@ -65,7 +65,7 @@ namespace rec_system
             int[] vecini = new int[k + 1];
             for (int index = 0; index < k; index++)
             {
-                vecini[index] = results.MinBy(x => x.Value).Key;
+                vecini[index] = results.MaxBy(x => x.Value).Key;
                 results.Remove(vecini[index]);
             }
 
