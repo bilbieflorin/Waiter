@@ -45,14 +45,17 @@ namespace rec_system
             signatures.Remove(id_user);
 
             // Cream un obiect MinHasher cu 400 functii hash.
+            // Si calculam signaturile min Hash celorlalti utilizatori.
             MinHasher minHasher = new MinHasher(400);
+            Dictionary<int, int[]> signaturesMinHashes = minHasher.createMinhashCollection(
+                signatures);
             // Calculam signatura minHash a query-ului.
             int[] queryMinhashSignature = minHasher.getMinHashSignature(query);
 
             Dictionary<int, double> results = new Dictionary<int, double>();
             // Calculam similaritatea Jaccard folosind signatura minHash a tuturor 
             // utilizatorilor.
-            foreach (KeyValuePair<int, int[]> signatures_entry in signatures)
+            foreach (KeyValuePair<int, int[]> signatures_entry in signaturesMinHashes)
             {
                 double jaccard = MinHasher.calculateJaccard(queryMinhashSignature,
                     signatures_entry.Value);
