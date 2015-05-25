@@ -65,37 +65,16 @@ namespace db_mapping
                     specific = data_reader_preparate.GetString(6);
                 }
 
-                SqlConnection db_connection_ingrediente = new SqlConnection(connection_string_);
-
-                db_connection_ingrediente.Open();
-                SqlCommand fetch_denumire_ingrediente = new SqlCommand(
-                    @"select denumire
-                            from ingrediente join contine on(ingrediente.id_ingredient = contine.id_ingredient)
-                            where id_preparat = " + id, db_connection_ingrediente);
-
-                List<String> lista_ingrediente = new List<String>();
-                SqlDataReader data_reader_ingrediente =
-                    fetch_denumire_ingrediente.ExecuteReader();
-
-                while (data_reader_ingrediente.Read())
-                {
-                    String denumire_ingredient = data_reader_ingrediente.GetString(0);
-                    lista_ingrediente.Add(denumire_ingredient);
-                }
-
-                data_reader_ingrediente.Close();
-                db_connection_ingrediente.Close();
-
                 Preparat preparat = new Preparat();
                 preparat.Initialize(id, denumire, tip, pret, path, gramaj, specific,
-                    lista_ingrediente);
+                    ingredientePreparat(id));
                 lista_preparate.Add(preparat);
             }
             data_reader_preparate.Close();
             db_connection_preparate.Close();
             return lista_preparate;
         }
-
+        
         public static List<Ingredient> getIngrediente()
         {
             List<Ingredient> lista_ingrediente = new List<Ingredient>();
@@ -419,7 +398,87 @@ namespace db_mapping
             return dictionar;
         }
 
+        public static Dictionary<int, IstoricComenzi> istoricUtilizatori(int[] users)
+        {
+            Dictionary<int, IstoricComenzi> dictionar = new Dictionary<int, IstoricComenzi>();
+            foreach (var user in users)
+            {
+                SqlConnection istoric_user_connection = new SqlConnection(connection_string_);
+                istoric_user_connection.Open();
+                SqlCommand istoric_user_command = new SqlCommand(
+                        @"select id_comanda, data 
+                          from comenzi
+                          where id_user = @user", istoric_user_connection);
+                istoric_user_command.Parameters.Add(new SqlParameter("@user",user));
+                SqlDataReader istoric_user_reader = istoric_user_command.ExecuteReader();
+                while (istoric_user_reader.Read())
+                {
+                    int id_comanda = istoric_user_reader.GetInt32(0);
+                    Comanda comanda = getComanda(id_comanda);
+                    comanda.IdUser = user;
+                    comanda.Data = istoric_user_reader.GetDateTime(1);
+                    dictionar[user].addComanda(comanda);
+                }
+            }
+            return dictionar;
+        }
+
         private static String connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+        private static Comanda getComanda(int id_comanda)
+        {
+            Comanda comanda = new Comanda();
+            SqlConnection comanda_connection = new SqlConnection(connection_string_);
+            comanda_connection.Open();
+            SqlCommand comanda_command = new SqlCommand(
+                @"select id_preparat, denumire_preparat, gramaj, path, pret, denumire_specific, tip_preparat
+                  from preparate_comanda join preparate on preparate_comanda.id_preparat=preparate.id_preparat
+                                         join specific on preparate.id_specific=specific.id_specific
+                  where id_comanda = @id_comanda", comanda_connection);
+            comanda_command.Parameters.Add(new SqlParameter("@id_comanda",id_comanda));
+            SqlDataReader comanda_reader = comanda_command.ExecuteReader();
+            while (comanda_reader.Read())
+            {
+                int id_preparat = comanda_reader.GetInt32(0);
+                string denumire = comanda_reader.GetString(1);
+                double gramaj = comanda_reader.GetDouble(2);
+                string path = comanda_reader.GetString(3);
+                double pret = comanda_reader.GetDouble(4);
+                string specific = comanda_reader.GetString(5);
+                string tip = comanda_reader.GetString(6);
+                Preparat p = new Preparat();
+                p.Initialize(id_preparat,denumire,tip,pret,path,gramaj,specific,ingredientePreparat(id_preparat));
+                comanda.addItemComanda(new ItemComanda(p, 1));
+            }
+            comanda_reader.Close();
+            comanda_connection.Close();
+            return comanda;
+        }
+
+        private static List<String>ingredientePreparat(int id_preparat)
+        {
+            SqlConnection db_connection_ingrediente = new SqlConnection(connection_string_);
+
+                db_connection_ingrediente.Open();
+                SqlCommand fetch_denumire_ingrediente = new SqlCommand(
+                    @"select denumire
+                            from ingrediente join contine on(ingrediente.id_ingredient = contine.id_ingredient)
+                            where id_preparat = @id_preparat", db_connection_ingrediente);
+                fetch_denumire_ingrediente.Parameters.Add(new SqlParameter("@id_preparat", id_preparat));
+                List<String> lista_ingrediente = new List<String>();
+                SqlDataReader data_reader_ingrediente =
+                    fetch_denumire_ingrediente.ExecuteReader();
+
+                while (data_reader_ingrediente.Read())
+                {
+                    String denumire_ingredient = data_reader_ingrediente.GetString(0);
+                    lista_ingrediente.Add(denumire_ingredient);
+                }
+
+                data_reader_ingrediente.Close();
+                db_connection_ingrediente.Close();
+                return lista_ingrediente;
+        }
 
         private static void insertSpecificsForUser(int id, List<String> specifics_list)
         {
