@@ -15,14 +15,78 @@ namespace rec_system
 {
     public class RecFunctions
     {
+        // Recomandari calculate prin Content Based Filtering.
+        // In cazul in care clientul nu are istoric, functia returneaza false, iar
+        // lista de preparate e vida.
+        public List<Preparat> Gaseste_recomandari_ContentBased(int id_user)
+        {
+            IstoricComenzi istoric = DatabaseFunctions.getIstoric(id_user);
+            List<Comanda> comenzi = istoric.ListaComenzi;
+            Dictionary<String, int> dictionar_tipuri = new Dictionary<String,int>();
+            Dictionary<String, int> dictionar_specificuri = new Dictionary<String,int>();
+
+            // Calculam pretul mediu al unei comenzi, tipul si specificul preferate.
+            double pret_mediu = 0;
+            int nr_preparate = 0, value = 0;
+            String specific = "", tip = "";
+            Hashtable lista_item_comanda;
+            Preparat preparat;
+
+            foreach(Comanda comanda in comenzi)
+            {
+                pret_mediu += comanda.Pret;
+                nr_preparate += comanda.NumarPreparate;
+
+                lista_item_comanda = comanda.ListaItem;
+                foreach(ItemComanda item in lista_item_comanda)
+                {
+                    preparat = item.Preparat;
+                    specific = preparat.Specific;
+                    if(dictionar_specificuri.ContainsKey(specific))
+                    {
+                        dictionar_specificuri.TryGetValue(specific, out value);
+                        dictionar_specificuri.Add(specific, value+1);
+                    }
+                    else
+                    {
+                        dictionar_specificuri.Add(specific, 1);
+                    }
+
+                    tip = preparat.Tip;
+                    if (dictionar_tipuri.ContainsKey(tip))
+                    {
+                        dictionar_tipuri.TryGetValue(tip, out value);
+                        dictionar_tipuri.Add(tip, value + 1);
+                    }
+                    else
+                    {
+                        dictionar_tipuri.Add(tip, 1);
+                    }
+                }
+                
+            }
+
+            specific = dictionar_specificuri.MaxBy(x => x.Value).Key;
+            tip = dictionar_tipuri.MaxBy(x => x.Value).Key;
+            List<Preparat> recomandari = new List<Preparat>();
+            if (nr_preparate > 0)
+            {
+                pret_mediu = pret_mediu / nr_preparate;
+            }
+
+            recomandari = PreparateDupaParametri(specific, tip, pret_mediu);
+            return recomandari;
+        }
+
+        // Recomandari calculate prin Collective Filtering.
         public static List<Preparat> Gaseste_recomandari(int id_user, Comanda comanda)
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
             int[] lista_vecini = Calculeaza_vecini(3, id_user);
             List<IstoricComenzi> lista_istorice = DatabaseFunctions.istoricUtilizatori(lista_vecini);
             IstoricComenzi istoric_user = DatabaseFunctions.getIstoric(id_user);
-            //eliminare preparate comandate
-            //eliminare cele a caror ora nu apartine intervalului curent
+            // Eliminare preparate comandate.
+            // Eliminare cele a caror ora nu apartine intervalului curent.
             List<Preparat> recomandari = new List<Preparat>();
 
             return eliminaComandate(lista_istorice, istoric_user);
