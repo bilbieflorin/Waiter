@@ -490,6 +490,79 @@ namespace db_mapping
         }
 
         /// <summary>
+        /// Intoarce cele mai comandate k preparate din lista de specifice data ca parametru 
+        /// </summary>
+        public static List<Preparat> topKPreparateSpecific(List<String> specifics, int k)
+        {
+            List<Preparat> preparate = new List<Preparat>();
+            string lista_specifice="";
+            foreach (var specific in specifics)
+            {
+                lista_specifice += "'" + specific + "',";
+            }
+            SqlConnection connection = new SqlConnection(connection_string_);
+            connection.Open();
+            SqlCommand command = new SqlCommand(
+                @"select top "+k+" p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat, sum(cantitate) "+
+                  "from preparate as p join preparate_comanda as pc on pc.id_preparat=p.id_preparat "+
+                                      "join specific as s on p.id_specific = s.id_specific "+
+                  "where denumire_specific in (@lista_specifice) "+
+                  "group by p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat " +
+                  "order by sum(cantitate) desc", connection);
+            command.Parameters.Add(new SqlParameter("@lista_specifice", lista_specifice.Substring(0, lista_specifice.Length - 1)));
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string denumire = reader.GetString(1);
+                double pret = reader.GetDouble(2);
+                double gramaj = reader.GetDouble(3);
+                string specific = reader.GetString(4);
+                string path = reader.GetString(5);
+                string tip = reader.GetString(6);
+                Preparat preparat = new Preparat();
+                preparat.Initialize(id,denumire,tip,pret,path,gramaj,specific,ingredientePreparat(id));
+                preparate.Add(preparat);
+            }
+            reader.Close();
+            connection.Close();
+            return preparate;
+        }
+
+        /// <summary>
+        /// Intoarce cele mai comandate k preparate  
+        /// </summary>
+        public static List<Preparat> topKPreparate(int k)
+        {
+            List<Preparat> preparate = new List<Preparat>();
+            SqlConnection connection = new SqlConnection(connection_string_);
+            connection.Open();
+            SqlCommand command = new SqlCommand(
+                @"select top " + k + " p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat, sum(cantitate) " +
+                  "from preparate as p join preparate_comanda as pc on pc.id_preparat=p.id_preparat " +
+                                      "join specific as s on p.id_specific = s.id_specific " +
+                  "group by p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat " +
+                  "order by sum(cantitate) desc", connection);
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string denumire = reader.GetString(1);
+                double pret = reader.GetDouble(2);
+                double gramaj = reader.GetDouble(3);
+                string specific = reader.GetString(4);
+                string path = reader.GetString(5);
+                string tip = reader.GetString(6);
+                Preparat preparat = new Preparat();
+                preparat.Initialize(id, denumire, tip, pret, path, gramaj, specific, ingredientePreparat(id));
+                preparate.Add(preparat);
+            }
+            reader.Close();
+            connection.Close();
+            return preparate;
+        }
+
+        /// <summary>
         /// Connection string-ul pentru legatura la baza de date 
         /// </summary>
         private static String connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;

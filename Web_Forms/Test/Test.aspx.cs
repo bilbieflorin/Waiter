@@ -16,6 +16,11 @@ public partial class Test : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         User u = Session["user"] as User;
+        List<String> list = new List<string>();
+        list.Add("Italian");
+        list.Add("Frantuzesc");
+        DatabaseFunctions.topKPreparateSpecific(list,10);
+        DatabaseFunctions.topKPreparate(10);
         //List<Preparat> lista_preparate = DatabaseFunctions.getPreparate(ConnectionString);
         //foreach (Preparat preparat in lista_preparate)
         //{
@@ -59,17 +64,17 @@ public partial class Test : System.Web.UI.Page
         //}
 
 
-        int[] vecini = new int[50];
-        vecini = RecFunctions.Calculeaza_vecini(3, u.Id);
+        //int[] vecini = new int[50];
+        //vecini = RecFunctions.Calculeaza_vecini(3, u.Id);
 
-        foreach (int vecin in vecini)
-        {
-            Label label = new Label();
-            label.Text += vecin + " ";
-            HtmlGenericControl br = new HtmlGenericControl("br");
-            show_content.Controls.Add(label);
-            show_content.Controls.Add(br);
-        }
+        //foreach (int vecin in vecini)
+        //{
+        //    Label label = new Label();
+        //    label.Text += vecin + " ";
+        //    HtmlGenericControl br = new HtmlGenericControl("br");
+        //    show_content.Controls.Add(label);
+        //    show_content.Controls.Add(br);
+        //}
         //List<Preparat> prep = rec_system.RecFunctions.Gaseste_recomandari(u.Id, null);
         //foreach (var p in prep)
         //{
