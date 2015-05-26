@@ -16,8 +16,6 @@ namespace rec_system
     public class RecFunctions
     {
         // Recomandari calculate prin Content Based Filtering.
-        // In cazul in care clientul nu are istoric, functia returneaza false, iar
-        // lista de preparate e vida.
         public List<Preparat> Gaseste_recomandari_ContentBased(int id_user)
         {
             IstoricComenzi istoric = DatabaseFunctions.getIstoric(id_user);
