@@ -20,7 +20,7 @@ namespace rec_system
         {
             IstoricComenzi istoric = DatabaseFunctions.getIstoric(id_user);
             List<Comanda> istoric_comenzi = istoric.ListaComenzi;
-            List<Preparat> recomandari;
+            List<Preparat> recomandari=null;
 
             if (istoric_comenzi.Count > 0)
             {
@@ -30,9 +30,8 @@ namespace rec_system
             }
             else
             {   // Top din DB sau Top dupa specificul ales din formularul de inregistrare.
-                recomandari = Gaseste_recomandari_Top(id_user, k);
+                //recomandari = Gaseste_recomandari_Top(id_user, k);
             }
-
             return recomandari;
         }
 
@@ -92,7 +91,7 @@ namespace rec_system
                 pret_mediu = pret_mediu / nr_preparate;
             }
 
-            //recomandari = PreparateDupaParametri(specific, tip, pret_mediu,2*k);
+            recomandari = preparateDupaParametri(specific, tip, pret_mediu, k);
             return recomandari;
         }
 
@@ -110,7 +109,6 @@ namespace rec_system
             List<Preparat> recomandari = preparate.GetRange(0, 2*k) as List<Preparat>;
             return recomandari;
         }
-
 
         public static int[] Calculeaza_vecini(int k, int id_user)
         {
@@ -178,6 +176,43 @@ namespace rec_system
                 }
             }
             return preparate.ToList();
+        }
+
+        private static List<Preparat> preparateDupaParametri(String specific, String tip, double pret_mediu, int k)
+        {
+            List<Preparat> lista_preparate = new List<Preparat>();
+            lista_preparate = DatabaseFunctions.preparateDupaPret(pret_mediu);
+            List<Preparat> preparate = intersectie(specific,tip,lista_preparate);
+            if (preparate.Count < k)
+            {
+                foreach (var preparat in preparate)
+                {
+                    lista_preparate.Remove(preparat);
+                }
+                foreach (var preparat in lista_preparate)
+                {
+                    if (preparat.Tip.Equals(tip) || preparat.Specific.Equals(specific))
+                    {
+                        preparate.Add(preparat);
+                    }
+                    if (preparate.Count == k)
+                        break;
+                }
+            }
+            return preparate;
+        }
+
+        private static List<Preparat> intersectie(String specific, String tip, List<Preparat> lista_preparate)
+        {
+            List<Preparat> preparate = new List<Preparat>();
+            foreach(var preparat in lista_preparate)
+            {
+                if (preparat.Tip.Equals(tip) && preparat.Specific.Equals(specific))
+                {
+                    preparate.Add(preparat);
+                }
+            }
+            return preparate;
         }
     }
 } // namespace

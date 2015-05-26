@@ -563,6 +563,37 @@ namespace db_mapping
         }
 
         /// <summary>
+        /// Intoarce preparatele care au pretul in intervalul[0.7 * pret_mediu, 1.3 * pret_mediu]
+        /// </summary>
+        public static List<Preparat> preparateDupaPret(double pret_mediu)
+        {
+            List<Preparat> preparate = new List<Preparat>();
+            SqlConnection connection = new SqlConnection(connection_string_);
+            connection.Open();
+            SqlCommand command = new SqlCommand(
+                @"select id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat
+                  from preparate join specific on preparat.id_specific = specific.id_specific
+                  where pret between 0.7*@pret_mediu and 1.3*@pret_mediu", connection);
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string denumire = reader.GetString(1);
+                double pret = reader.GetDouble(2);
+                double gramaj = reader.GetDouble(3);
+                string specific = reader.GetString(4);
+                string path = reader.GetString(5);
+                string tip = reader.GetString(6);
+                Preparat preparat = new Preparat();
+                preparat.Initialize(id, denumire, tip, pret, path, gramaj, specific, ingredientePreparat(id));
+                preparate.Add(preparat);
+            }
+            reader.Close();
+            connection.Close();
+            return preparate;
+        }
+
+        /// <summary>
         /// Connection string-ul pentru legatura la baza de date 
         /// </summary>
         private static String connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -683,6 +714,5 @@ namespace db_mapping
             delete_specifics_for_user_command.ExecuteNonQuery();
             delete_specifics_for_user_connection.Close();
         }
-
     }
 } // namespace

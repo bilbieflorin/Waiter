@@ -27,8 +27,8 @@ public partial class Recomandari : System.Web.UI.Page
             {    
                 recomandari_ = RecFunctions.Gaseste_recomandari_Collective(user.Id, null,4);
                 Session["recomandari"] = recomandari_;
+                bindRecomandariListViewData();
             }
-            bindRecomandariListViewData();
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "", "$('.nbsp').each(function() {$(this).before($('<span>').html('&nbsp;')); $(this).after($('<span>').html('&nbsp;'));});", true);
         }
     }
@@ -52,7 +52,7 @@ public partial class Recomandari : System.Web.UI.Page
 
             ModalItemTitle.Text = preparat.Denumire;
             ModalItemImage.ImageUrl = preparat.PathImagine;
-            string ingrediente = " ";
+            string ingrediente="";
             if (preparat.ListaIngrediente.Capacity > 0)
             {
                 int i;
