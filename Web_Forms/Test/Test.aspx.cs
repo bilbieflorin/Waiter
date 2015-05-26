@@ -16,11 +16,11 @@ public partial class Test : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         User u = Session["user"] as User;
-        List<String> list = new List<string>();
-        list.Add("Italian");
-        list.Add("Frantuzesc");
-        DatabaseFunctions.topKPreparateSpecific(list,10);
-        DatabaseFunctions.topKPreparate(10);
+        //List<String> list = new List<string>();
+        //list.Add("Italian");
+        //list.Add("Frantuzesc");
+        //DatabaseFunctions.topKPreparateSpecific(list,10);
+        //DatabaseFunctions.topKPreparate(10);
         //List<Preparat> lista_preparate = DatabaseFunctions.getPreparate(ConnectionString);
         //foreach (Preparat preparat in lista_preparate)
         //{
@@ -75,15 +75,15 @@ public partial class Test : System.Web.UI.Page
         //    show_content.Controls.Add(label);
         //    show_content.Controls.Add(br);
         //}
-        //List<Preparat> prep = rec_system.RecFunctions.Gaseste_recomandari(u.Id, null);
-        //foreach (var p in prep)
-        //{
-        //    Label label = new Label();
-        //    label.Text += p.toString() + " " + prep.Count;
-        //    HtmlGenericControl br = new HtmlGenericControl("br");
-        //    show_content.Controls.Add(label);
-        //    show_content.Controls.Add(br);
-        //}
+        List<Preparat> prep = RecFunctions.Gaseste_recomandari_ContentBased(u.Id, 3, DatabaseFunctions.getIstoric(u.Id).ListaComenzi);
+        foreach (var p in prep)
+        {
+            Label label = new Label();
+            label.Text += p.toString() + " " + prep.Count;
+            HtmlGenericControl br = new HtmlGenericControl("br");
+            show_content.Controls.Add(label);
+            show_content.Controls.Add(br);
+        }
     }
 
     private string sha256(string password)

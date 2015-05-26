@@ -306,6 +306,47 @@ namespace db_mapping
         }
 
         /// <summary>
+        /// Intoarce numarul mediu de comandari al unui preparat al utilizatorilui cu id-ul id_user
+        /// </summary>
+        public static int numarComandariPreparat(int id_user, int id_preparat)
+        {
+            SqlConnection connection = new SqlConnection(connection_string_);
+            connection.Open();
+            SqlCommand command = new SqlCommand(
+                    @"select numar_comandari
+                      from frecvente
+                      where id_user = @id and id_preparat = @id_prep", connection);
+            command.Parameters.Add(new SqlParameter("@id",id_user));
+            command.Parameters.Add(new SqlParameter("@id_prep", id_preparat));
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Read();
+            int nr = Convert.ToInt32(reader.GetInt32(0))+1;
+            reader.Close();
+            connection.Close();
+            return nr;
+        }
+
+        /// <summary>
+        /// Intoarce numarul de comandari al preparaturlui id_preparat al utilizatorilui cu id-ul id_user
+        /// </summary>
+        public static int numarMediuComandariPreparat(int id_user)
+        {
+            SqlConnection connection = new SqlConnection(connection_string_);
+            connection.Open();
+            SqlCommand command = new SqlCommand(
+                    @"select isnull(avg(numar_comandari),0)
+                      from frecvente
+                      where id_user = @id", connection);
+            command.Parameters.Add(new SqlParameter("@id", id_user));
+            SqlDataReader reader = command.ExecuteReader();
+            reader.Read();
+            int avg = reader.GetInt32(0);
+            reader.Close();
+            connection.Close();
+            return avg;
+        }
+
+        /// <summary>
         /// Intoarce lista de denumiri ale specificelor
         /// </summary>
         public static List<String> getSpecifice()
@@ -430,7 +471,8 @@ namespace db_mapping
             preparate_comandate_connection.Open();
             SqlCommand preparate_comandate_command = new SqlCommand(
                 @"select id_user, id_preparat, numar_comandari
-                  from frecvente", preparate_comandate_connection);
+                  from frecvente
+                  where id_preparat not in (66,65)", preparate_comandate_connection);
             SqlDataReader preparate_comandate_reader = preparate_comandate_command.ExecuteReader();
             while (preparate_comandate_reader.Read())
             {
@@ -572,8 +614,9 @@ namespace db_mapping
             connection.Open();
             SqlCommand command = new SqlCommand(
                 @"select id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat
-                  from preparate join specific on preparat.id_specific = specific.id_specific
+                  from preparate join specific on preparate.id_specific = specific.id_specific
                   where pret between 0.7*@pret_mediu and 1.3*@pret_mediu", connection);
+            command.Parameters.Add(new SqlParameter("@pret_mediu",pret_mediu));
             SqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
@@ -610,7 +653,7 @@ namespace db_mapping
                 @"select preparate.id_preparat, denumire_preparat, gramaj, path, pret, denumire_specific, tip_preparat, cantitate, data_adaugare
                   from preparate_comanda join preparate on preparate_comanda.id_preparat=preparate.id_preparat
                                          join specific on preparate.id_specific=specific.id_specific
-                  where id_comanda = @id_comanda", comanda_connection);
+                  where id_comanda = @id_comanda and preparate.id_preparat not in(65,66)", comanda_connection);
             comanda_command.Parameters.Add(new SqlParameter("@id_comanda", id_comanda));
             SqlDataReader comanda_reader = comanda_command.ExecuteReader();
             while (comanda_reader.Read())

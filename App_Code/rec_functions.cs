@@ -36,8 +36,7 @@ namespace rec_system
         }
 
         // Recomandari calculate prin Content Based Filtering.
-        public List<Preparat> Gaseste_recomandari_ContentBased(int id_user, int k,
-            List<Comanda> istoric_comenzi)
+        public static List<Preparat> Gaseste_recomandari_ContentBased(int id_user, int k, List<Comanda> istoric_comenzi)
         {
             Dictionary<String, int> dictionar_tipuri = new Dictionary<String,int>();
             Dictionary<String, int> dictionar_specificuri = new Dictionary<String,int>();
@@ -55,14 +54,16 @@ namespace rec_system
                 nr_preparate += comanda.NumarPreparate;
 
                 lista_item_comanda = comanda.ListaItem;
-                foreach(ItemComanda item in lista_item_comanda)
+                foreach(DictionaryEntry item in lista_item_comanda)
                 {
-                    preparat = item.Preparat;
+                    ItemComanda item_comanda = item.Value as ItemComanda;
+                    preparat = item_comanda.Preparat;
                     specific = preparat.Specific;
                     if(dictionar_specificuri.ContainsKey(specific))
                     {
-                        dictionar_specificuri.TryGetValue(specific, out value);
-                        dictionar_specificuri.Add(specific, value+1);
+                        dictionar_specificuri[specific]++;
+                        //.TryGetValue(specific, out value);
+                        //dictionar_specificuri.Add(specific, value+1);
                     }
                     else
                     {
@@ -72,8 +73,9 @@ namespace rec_system
                     tip = preparat.Tip;
                     if (dictionar_tipuri.ContainsKey(tip))
                     {
-                        dictionar_tipuri.TryGetValue(tip, out value);
-                        dictionar_tipuri.Add(tip, value + 1);
+                        dictionar_tipuri[tip]++;
+                        //    .TryGetValue(tip, out value);
+                        //dictionar_tipuri.Add(tip, value + 1);
                     }
                     else
                     {
@@ -96,8 +98,7 @@ namespace rec_system
         }
 
         // Recomandari calculate prin Collective Filtering.
-        public static List<Preparat> Gaseste_recomandari_Collective(int id_user, 
-            Comanda comanda, int k)
+        public static List<Preparat> Gaseste_recomandari_Collective(int id_user, Comanda comanda, int k)
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
             int[] lista_vecini = Calculeaza_vecini(3, id_user);
@@ -105,8 +106,9 @@ namespace rec_system
             IstoricComenzi istoric_user = DatabaseFunctions.getIstoric(id_user);
             // Eliminare preparate comandate.
             // Eliminare cele a caror ora nu apartine intervalului curent.
-            List<Preparat> preparate = eliminaComandate(lista_istorice, istoric_user);
-            List<Preparat> recomandari = preparate.GetRange(0, 2*k) as List<Preparat>;
+            comanda = (comanda == null)? new Comanda(): comanda;
+            List<Preparat> preparate = eliminaComandate(lista_istorice, istoric_user, comanda);
+            List<Preparat> recomandari = preparate.GetRange(0,k) as List<Preparat>;
             return recomandari;
         }
 
@@ -157,21 +159,28 @@ namespace rec_system
 
         }
 
-        private static List<Preparat> eliminaComandate(List<IstoricComenzi> istorice, IstoricComenzi istoric_user)
+        private static List<Preparat> eliminaComandate(List<IstoricComenzi> istorice, IstoricComenzi istoric_user, Comanda comanda)
         {
             HashSet<Preparat> preparate = new HashSet<Preparat>();
-
+            int avg = DatabaseFunctions.numarMediuComandariPreparat(istoric_user.IdUser);
             foreach (var istoric in istorice)
             {
-                foreach (var comanda in istoric.ListaComenzi)
+                foreach (var com in istoric.ListaComenzi)
                 {
-                    foreach (DictionaryEntry item in comanda.ListaItem)
+                    foreach (DictionaryEntry item in com.ListaItem)
                     {
                         ItemComanda item_comanda = item.Value as ItemComanda;
-                        if (!istoric_user.continePreparat(item_comanda.Preparat))
-                        {
-                            preparate.Add(item_comanda.Preparat);
-                        }
+                        if (!comanda.ListaItem.ContainsKey(item_comanda.Preparat.Id))
+                            if (!istoric_user.continePreparat(item_comanda.Preparat))
+                            {
+                                preparate.Add(item_comanda.Preparat);
+                            }
+                            else
+                            {
+                                int nr = DatabaseFunctions.numarComandariPreparat(istoric_user.IdUser, item_comanda.Preparat.Id);
+                                if(avg >= nr)
+                                    preparate.Add(item_comanda.Preparat);
+                            }
                     }
                 }
             }
