@@ -15,7 +15,7 @@ public partial class Test : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        User u = Session["user"] as User;
         //List<Preparat> lista_preparate = DatabaseFunctions.getPreparate(ConnectionString);
         //foreach (Preparat preparat in lista_preparate)
         //{
@@ -35,7 +35,7 @@ public partial class Test : System.Web.UI.Page
         //    show_content.Controls.Add(continut_users);
         //    show_content.Controls.Add(br);
         //}
-        
+
         //    , label2 = new Label();
         //show_content.Controls.Add(label);
         //show_content.Controls.Add(new HtmlGenericControl("br"));
@@ -59,20 +59,29 @@ public partial class Test : System.Web.UI.Page
         }
          * */
 
-        int[] vecini = new int[50];
-        vecini = RecFunctions.Calculeaza_vecini(3, 29);
+        //int[] vecini = new int[50];
+        //vecini = RecFunctions.Calculeaza_vecini(3, u.Id);
 
-        foreach (int vecin in vecini)
+        //foreach (int vecin in vecini)
+        //{
+        //    Label label = new Label();
+        //    label.Text += vecin + " ";
+        //    HtmlGenericControl br = new HtmlGenericControl("br");
+        //    show_content.Controls.Add(label);
+        //    show_content.Controls.Add(br);
+        //}
+        List<Preparat> prep = rec_system.RecFunctions.Gaseste_recomandari(u.Id, null);
+        foreach (var p in prep)
         {
             Label label = new Label();
-            label.Text += vecin + " ";
+            label.Text += p.toString() + " " + prep.Count;
             HtmlGenericControl br = new HtmlGenericControl("br");
             show_content.Controls.Add(label);
             show_content.Controls.Add(br);
         }
     }
 
-     private string sha256(string password)
+    private string sha256(string password)
     {
         SHA256Managed crypt = new SHA256Managed();
         string hash = String.Empty;

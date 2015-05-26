@@ -6,7 +6,7 @@ using System.Web;
 
 namespace db_mapping
 {
-  
+
     /// <summary>
     /// Clasa Preparat mapeaza tabelul "Preparate" din baza de date.
     /// </summary>
@@ -18,7 +18,7 @@ namespace db_mapping
         public static int UninitializedInt = -100000;
         public static double UninitializedDouble = -100000.0;
 
-        public Preparat() 
+        public Preparat()
         {
             id_ = UninitializedInt;
             denumire_preparat_ = path_imagine_preparat_ = tip_preparat_ =
@@ -46,7 +46,7 @@ namespace db_mapping
         // 6.0, 2, data_adaugare);
         public void Initialize(int id, String denumire_preparat, String tip_preparat,
             double pret, String path_imagine = null, double cantitate = -100000.0,
-            String denumire_specific = null, List<String> lista_ingrediente = null, 
+            String denumire_specific = null, List<String> lista_ingrediente = null,
             DateTime data_adaugare = default(DateTime))
         {
             id_ = id;
@@ -68,18 +68,32 @@ namespace db_mapping
             String preparat = "";
             if (id_ != UninitializedInt)
             {
-                preparat += "Id = " + id_ + " ";
+                //preparat += "Id = " + id_ + " ";
                 preparat += "Denumire preparat = " + denumire_preparat_ + " ";
-                preparat += "Tip Preparat = " + tip_preparat_ + " ";
-                preparat += "Pret = " + pret_ + " ";
-                preparat += "Path Imagine Preparat = " + path_imagine_preparat_ + " ";
-                preparat += "Cantitate = " + gramaj_ + " ";
-                preparat += "Id Specific = " + denumire_specific_ + " ";
-                preparat += "Data Adaugare = " + data_adaugare_ + "\n";
+                //preparat += "Tip Preparat = " + tip_preparat_ + " ";
+                //preparat += "Pret = " + pret_ + " ";
+                //preparat += "Path Imagine Preparat = " + path_imagine_preparat_ + " ";
+                //preparat += "Cantitate = " + gramaj_ + " ";
+                //preparat += "Id Specific = " + denumire_specific_ + " ";
+                //preparat += "Data Adaugare = " + data_adaugare_ + "\n";
 
                 // ? TODO: Adauga lista de ingrediente.
             }
             return preparat;
+        }
+
+        public override bool Equals(Object p)
+        {
+            if (p == null)
+                return false;
+            Preparat prep = p as Preparat;
+            if (this.id_ == prep.id_)
+                return true;
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return this.Id;
         }
 
         // Proprietati read-only.

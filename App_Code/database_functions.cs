@@ -13,8 +13,10 @@ namespace db_mapping
     /// </summary>
     public class DatabaseFunctions
     {
-        // Intoarce lista de preparate din BD, fara sa ia in considerare
-        // coloana "data_adaugare".
+        /// <summary>
+        ///  Intoarce lista de preparate din BD, fara sa ia in considerare
+        /// coloana "data_adaugare".
+        /// </summary>
         public static List<Preparat> getPreparate()
         {
             List<Preparat> lista_preparate = new List<Preparat>();
@@ -74,7 +76,10 @@ namespace db_mapping
             db_connection_preparate.Close();
             return lista_preparate;
         }
-        
+
+        /// <summary>
+        /// Intoarce lista de ingrediente din baza de date
+        /// </summary>
         public static List<Ingredient> getIngrediente()
         {
             List<Ingredient> lista_ingrediente = new List<Ingredient>();
@@ -101,6 +106,9 @@ namespace db_mapping
             return lista_ingrediente;
         }
 
+        /// <summary>
+        /// Intoarce lista de utilizatori din baza de date
+        /// </summary>
         public static List<User> getUsers()
         {
             List<User> lista_users = new List<User>();
@@ -140,12 +148,16 @@ namespace db_mapping
             return lista_users;
         }
 
-        public static void insertUser(User user)
+        /// <summary>
+        /// Adauga un nou utilizator la baza de date si intoarce id-ul liniei inserate
+        /// </summary>
+        public static int insertUser(User user)
         {
             SqlConnection insert_user_connection = new SqlConnection(connection_string_);
             insert_user_connection.Open();
             SqlCommand insert_user_command = new SqlCommand(
                                             @"insert into users (email, password, first_name, last_name, join_date)
+                                              output inserted.id_user
                                               values(@email, @parola, @first_name, @last_name, @Date)",
                                               insert_user_connection);
             insert_user_command.Parameters.Add(new SqlParameter("@email", user.Email));
@@ -160,13 +172,16 @@ namespace db_mapping
             else
                 insert_user_command.Parameters.Add(new SqlParameter("@last_name", user.LastName));
             insert_user_command.Parameters.Add(new SqlParameter("@date", user.JoinDate));
-            insert_user_command.ExecuteNonQuery();
+            int id = (int)insert_user_command.ExecuteScalar();
             insert_user_connection.Close();
-            int id = getUserIdByEmail(user.Email);
             if (user.SpecificsList != null)
                 insertSpecificsForUser(id, user.SpecificsList);
+            return id;
         }
 
+        /// <summary>
+        /// Adauga un ingredient nou la baza de date
+        /// </summary>
         public static int insertIngredient(Ingredient ingredient)
         {
             SqlConnection insert_ingredient_connection = new SqlConnection(connection_string_);
@@ -183,6 +198,9 @@ namespace db_mapping
             return id_ingredient;
         }
 
+        /// <summary>
+        ///Introduce o noua combinatie preparat-ingredient in baza de date
+        /// </summary>
         public static void insertPreparatContineIngredient(int id_preparat, int id_ingredient)
         {
             SqlConnection insert_contine_connection = new SqlConnection(connection_string_);
@@ -197,6 +215,9 @@ namespace db_mapping
             insert_contine_connection.Close();
         }
 
+        /// <summary>
+        ///Insereaza un nou preparat in baza de date
+        /// </summary>
         public static int insertPreparat(Preparat preparat)
         {
             SqlConnection insert_preparat_connection = new SqlConnection(connection_string_);
@@ -220,24 +241,9 @@ namespace db_mapping
             return id_preparat;
         }
 
-        public static int getUserIdByEmail(String email)
-        {
-            SqlConnection get_user_id_connection = new SqlConnection(connection_string_);
-            get_user_id_connection.Open();
-            SqlCommand get_user_id_command = new SqlCommand(
-                        @"select id_user
-                          from users
-                          where email = @email",
-                        get_user_id_connection);
-            get_user_id_command.Parameters.Add(new SqlParameter("@email", email));
-            SqlDataReader get_user_id_reader = get_user_id_command.ExecuteReader();
-            get_user_id_reader.Read();
-            int id = get_user_id_reader.GetInt32(0);
-            get_user_id_reader.Close();
-            get_user_id_connection.Close();
-            return id;
-        }
-
+        /// <summary>
+        /// Verifica daca exista email-ulul dat ca parametru in baza de date
+        /// </summary>
         public static bool checkEmailIfExist(String email)
         {
             SqlConnection get_user_id_connection = new SqlConnection(connection_string_);
@@ -258,6 +264,9 @@ namespace db_mapping
             return false;
         }
 
+        /// <summary>
+        /// Intoarce id-ul specificului cu denumirea denumire_specific
+        /// </summary>
         public static int getSpecificId(String denumire_specific)
         {
             SqlConnection get_user_id_connection = new SqlConnection(connection_string_);
@@ -276,6 +285,9 @@ namespace db_mapping
             return id;
         }
 
+        /// <summary>
+        /// Intoarce lista de denumiri ale specificelor
+        /// </summary>
         public static List<String> getSpecifice()
         {
             List<String> lista_specifice = new List<String>();
@@ -299,7 +311,10 @@ namespace db_mapping
             return lista_specifice;
         }
 
-        public static List<String> getSpecificsForUser(int id)
+        /// <summary>
+        /// Intoarce lista de specifice pentru user-ul cu care id-ul id_user
+        /// </summary>
+        public static List<String> getSpecificsForUser(int id_user)
         {
             List<String> lista_specifice = new List<String>();
             SqlConnection db_connection_specifice = new SqlConnection(connection_string_);
@@ -310,7 +325,7 @@ namespace db_mapping
                                                           where id_user = @id
                                                           order by denumire_specific",
                                                           db_connection_specifice);
-            fetch_specifice.Parameters.Add(new SqlParameter("@id", id));
+            fetch_specifice.Parameters.Add(new SqlParameter("@id", id_user));
 
             SqlDataReader data_reader_specifice = fetch_specifice.ExecuteReader();
 
@@ -324,6 +339,9 @@ namespace db_mapping
             return lista_specifice;
         }
 
+        /// <summary>
+        /// Verifica daca exista combinatia email-parola in baza de date
+        /// </summary>
         public static User checkEmailAndPasswordIfExists(String email, String password)
         {
             SqlConnection get_user_connection = new SqlConnection(connection_string_);
@@ -355,6 +373,9 @@ namespace db_mapping
             return user;
         }
 
+        /// <summary>
+        /// Insereaza o comanda in baza de date
+        /// </summary>
         public static void trimiteComanda(Comanda comanda)
         {
             SqlConnection inserare_comanda_connection = new SqlConnection(connection_string_);
@@ -373,7 +394,11 @@ namespace db_mapping
             inserareItemComanda(comanda.ListaItem, id_comanda);
         }
 
-        public static Dictionary<int,List<int>> preparateComandateDupaUtilizator()
+        /// <summary>
+        /// Intoarce un dictionar de perechu de forma
+        /// id_user-vector de id-uri de preparate comandate
+        /// </summary>
+        public static Dictionary<int, List<int>> preparateComandateDupaUtilizator()
         {
             List<User> users = getUsers();
             Dictionary<int, List<int>> dictionar = new Dictionary<int, List<int>>();
@@ -384,58 +409,85 @@ namespace db_mapping
             SqlConnection preparate_comandate_connection = new SqlConnection(connection_string_);
             preparate_comandate_connection.Open();
             SqlCommand preparate_comandate_command = new SqlCommand(
-                @"select id_user, id_preparat
+                @"select id_user, id_preparat, numar_comandari
                   from frecvente", preparate_comandate_connection);
             SqlDataReader preparate_comandate_reader = preparate_comandate_command.ExecuteReader();
             while (preparate_comandate_reader.Read())
             {
                 int id_user = preparate_comandate_reader.GetInt32(0);
                 int id_preparat = preparate_comandate_reader.GetInt32(1);
-                dictionar[id_user].Add(id_preparat);
+                int cantitate = preparate_comandate_reader.GetInt32(2);
+                for (int i = 1; i <= cantitate; i++)
+                {
+                    dictionar[id_user].Add(id_preparat);
+                }
             }
             preparate_comandate_reader.Close();
             preparate_comandate_connection.Close();
             return dictionar;
         }
 
-        public static Dictionary<int, IstoricComenzi> istoricUtilizatori(int[] users)
+        /// <summary>
+        /// Intoarce o lista de IstoricComenzi pentru id-urile 
+        /// utilizatorilor din vectorul users
+        /// </summary>
+        public static List<IstoricComenzi> istoricUtilizatori(int[] users)
         {
-            Dictionary<int, IstoricComenzi> dictionar = new Dictionary<int, IstoricComenzi>();
+            List<IstoricComenzi> lista_istoric = new List<IstoricComenzi>();
             foreach (var user in users)
             {
-                SqlConnection istoric_user_connection = new SqlConnection(connection_string_);
-                istoric_user_connection.Open();
-                SqlCommand istoric_user_command = new SqlCommand(
-                        @"select id_comanda, data 
-                          from comenzi
-                          where id_user = @user", istoric_user_connection);
-                istoric_user_command.Parameters.Add(new SqlParameter("@user",user));
-                SqlDataReader istoric_user_reader = istoric_user_command.ExecuteReader();
-                while (istoric_user_reader.Read())
-                {
-                    int id_comanda = istoric_user_reader.GetInt32(0);
-                    Comanda comanda = getComanda(id_comanda);
-                    comanda.IdUser = user;
-                    comanda.Data = istoric_user_reader.GetDateTime(1);
-                    dictionar[user].addComanda(comanda);
-                }
+                lista_istoric.Add(getIstoric(user));
             }
-            return dictionar;
+            return lista_istoric;
         }
 
+        /// <summary>
+        /// Intoarce istoricul comenzilor pentru utilizatorul cu id-ul id_user
+        /// </summary>
+        public static IstoricComenzi getIstoric(int user)
+        {
+            IstoricComenzi istoric = new IstoricComenzi(user);
+            SqlConnection istoric_user_connection = new SqlConnection(connection_string_);
+            istoric_user_connection.Open();
+            SqlCommand istoric_user_command = new SqlCommand(
+                    @"select id_comanda, data, valoare
+                          from comenzi
+                          where id_user = @user", istoric_user_connection);
+            istoric_user_command.Parameters.Add(new SqlParameter("@user", user));
+            SqlDataReader istoric_user_reader = istoric_user_command.ExecuteReader();
+            while (istoric_user_reader.Read())
+            {
+                int id_comanda = istoric_user_reader.GetInt32(0);
+                Comanda comanda = getComanda(id_comanda);
+                comanda.IdUser = user;
+                comanda.Pret = istoric_user_reader.GetDouble(2);
+                comanda.Data = istoric_user_reader.GetDateTime(1);
+                istoric.addComanda(comanda);
+            }
+            istoric_user_reader.Close();
+            istoric_user_connection.Close();
+            return istoric;
+        }
+
+        /// <summary>
+        /// Connection string-ul pentru legatura la baza de date 
+        /// </summary>
         private static String connection_string_ = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
+        /// <summary>
+        /// Intoarce comanda cu id-ul  id_comanda
+        /// </summary>
         private static Comanda getComanda(int id_comanda)
         {
             Comanda comanda = new Comanda();
             SqlConnection comanda_connection = new SqlConnection(connection_string_);
             comanda_connection.Open();
             SqlCommand comanda_command = new SqlCommand(
-                @"select id_preparat, denumire_preparat, gramaj, path, pret, denumire_specific, tip_preparat
+                @"select preparate.id_preparat, denumire_preparat, gramaj, path, pret, denumire_specific, tip_preparat, cantitate, data_adaugare
                   from preparate_comanda join preparate on preparate_comanda.id_preparat=preparate.id_preparat
                                          join specific on preparate.id_specific=specific.id_specific
                   where id_comanda = @id_comanda", comanda_connection);
-            comanda_command.Parameters.Add(new SqlParameter("@id_comanda",id_comanda));
+            comanda_command.Parameters.Add(new SqlParameter("@id_comanda", id_comanda));
             SqlDataReader comanda_reader = comanda_command.ExecuteReader();
             while (comanda_reader.Read())
             {
@@ -446,40 +498,48 @@ namespace db_mapping
                 double pret = comanda_reader.GetDouble(4);
                 string specific = comanda_reader.GetString(5);
                 string tip = comanda_reader.GetString(6);
+                int cantiate = comanda_reader.GetInt32(7);
+                DateTime data_adaugare = comanda_reader.GetDateTime(8);
                 Preparat p = new Preparat();
-                p.Initialize(id_preparat,denumire,tip,pret,path,gramaj,specific,ingredientePreparat(id_preparat));
-                comanda.addItemComanda(new ItemComanda(p, 1));
+                p.Initialize(id_preparat, denumire, tip, pret, path, gramaj, specific, ingredientePreparat(id_preparat), data_adaugare);
+                comanda.addItemComanda(new ItemComanda(p, cantiate));
             }
             comanda_reader.Close();
             comanda_connection.Close();
             return comanda;
         }
 
-        private static List<String>ingredientePreparat(int id_preparat)
+        /// <summary>
+        /// Intoarce lista de ingrediente pentru un preparat
+        /// </summary>
+        private static List<String> ingredientePreparat(int id_preparat)
         {
             SqlConnection db_connection_ingrediente = new SqlConnection(connection_string_);
 
-                db_connection_ingrediente.Open();
-                SqlCommand fetch_denumire_ingrediente = new SqlCommand(
-                    @"select denumire
+            db_connection_ingrediente.Open();
+            SqlCommand fetch_denumire_ingrediente = new SqlCommand(
+                @"select denumire
                             from ingrediente join contine on(ingrediente.id_ingredient = contine.id_ingredient)
                             where id_preparat = @id_preparat", db_connection_ingrediente);
-                fetch_denumire_ingrediente.Parameters.Add(new SqlParameter("@id_preparat", id_preparat));
-                List<String> lista_ingrediente = new List<String>();
-                SqlDataReader data_reader_ingrediente =
-                    fetch_denumire_ingrediente.ExecuteReader();
+            fetch_denumire_ingrediente.Parameters.Add(new SqlParameter("@id_preparat", id_preparat));
+            List<String> lista_ingrediente = new List<String>();
+            SqlDataReader data_reader_ingrediente =
+                fetch_denumire_ingrediente.ExecuteReader();
 
-                while (data_reader_ingrediente.Read())
-                {
-                    String denumire_ingredient = data_reader_ingrediente.GetString(0);
-                    lista_ingrediente.Add(denumire_ingredient);
-                }
+            while (data_reader_ingrediente.Read())
+            {
+                String denumire_ingredient = data_reader_ingrediente.GetString(0);
+                lista_ingrediente.Add(denumire_ingredient);
+            }
 
-                data_reader_ingrediente.Close();
-                db_connection_ingrediente.Close();
-                return lista_ingrediente;
+            data_reader_ingrediente.Close();
+            db_connection_ingrediente.Close();
+            return lista_ingrediente;
         }
 
+        /// <summary>
+        /// Insereaza o lista de specifice pentru un utilizator
+        /// </summary>
         private static void insertSpecificsForUser(int id, List<String> specifics_list)
         {
             foreach (string specific in specifics_list)
@@ -496,6 +556,9 @@ namespace db_mapping
             }
         }
 
+        /// <summary>
+        /// Insereaza o lista de ItemComanda in baza de date
+        /// </summary>
         private static void inserareItemComanda(Hashtable lista_item, int id_comanda)
         {
             foreach (DictionaryEntry item in lista_item)
