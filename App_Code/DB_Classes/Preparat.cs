@@ -68,18 +68,32 @@ namespace db_mapping
             String preparat = "";
             if (id_ != UninitializedInt)
             {
-                preparat += "Id = " + id_ + " ";
+                //preparat += "Id = " + id_ + " ";
                 preparat += "Denumire preparat = " + denumire_preparat_ + " ";
-                preparat += "Tip Preparat = " + tip_preparat_ + " ";
-                preparat += "Pret = " + pret_ + " ";
-                preparat += "Path Imagine Preparat = " + path_imagine_preparat_ + " ";
-                preparat += "Cantitate = " + gramaj_ + " ";
-                preparat += "Id Specific = " + denumire_specific_ + " ";
-                preparat += "Data Adaugare = " + data_adaugare_ + "\n";
+                //preparat += "Tip Preparat = " + tip_preparat_ + " ";
+                //preparat += "Pret = " + pret_ + " ";
+                //preparat += "Path Imagine Preparat = " + path_imagine_preparat_ + " ";
+                //preparat += "Cantitate = " + gramaj_ + " ";
+                //preparat += "Id Specific = " + denumire_specific_ + " ";
+                //preparat += "Data Adaugare = " + data_adaugare_ + "\n";
 
                 // ? TODO: Adauga lista de ingrediente.
             }
             return preparat;
+        }
+
+        public override bool Equals(Object p)
+        {
+            if (p == null)
+                return false;
+            Preparat prep = p as Preparat;
+            if (this.id_ == prep.id_)
+                return true;
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return this.Id;
         }
 
         // Proprietati read-only.

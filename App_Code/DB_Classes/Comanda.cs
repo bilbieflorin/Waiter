@@ -82,6 +82,7 @@ namespace db_mapping
         public double Pret
         {
             get { return pret_; }
+            set { pret_ = value; }
         }
 
         public Hashtable ListaItem
