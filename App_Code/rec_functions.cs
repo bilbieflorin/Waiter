@@ -16,7 +16,7 @@ namespace rec_system
     public class RecFunctions
     {
         // Recomandari calculate prin Content Based Filtering.
-        public List<Preparat> Gaseste_recomandari_ContentBased(int id_user)
+        public List<Preparat> Gaseste_recomandari_ContentBased(int id_user, int k)
         {
             IstoricComenzi istoric = DatabaseFunctions.getIstoric(id_user);
             List<Comanda> comenzi = istoric.ListaComenzi;
@@ -72,12 +72,12 @@ namespace rec_system
                 pret_mediu = pret_mediu / nr_preparate;
             }
 
-            recomandari = PreparateDupaParametri(specific, tip, pret_mediu);
+            //recomandari = PreparateDupaParametri(specific, tip, pret_mediu,2*k);
             return recomandari;
         }
 
         // Recomandari calculate prin Collective Filtering.
-        public static List<Preparat> Gaseste_recomandari(int id_user, Comanda comanda)
+        public static List<Preparat> Gaseste_recomandari(int id_user, Comanda comanda, int k)
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
             int[] lista_vecini = Calculeaza_vecini(3, id_user);
@@ -85,10 +85,11 @@ namespace rec_system
             IstoricComenzi istoric_user = DatabaseFunctions.getIstoric(id_user);
             // Eliminare preparate comandate.
             // Eliminare cele a caror ora nu apartine intervalului curent.
-            List<Preparat> recomandari = new List<Preparat>();
-
-            return eliminaComandate(lista_istorice, istoric_user);
+            List<Preparat> preparate = eliminaComandate(lista_istorice, istoric_user);
+            List<Preparat> recomandari = preparate.GetRange(0, 2*k) as List<Preparat>;
+            return recomandari;
         }
+
 
         public static int[] Calculeaza_vecini(int k, int id_user)
         {
