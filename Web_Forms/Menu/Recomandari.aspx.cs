@@ -25,7 +25,7 @@ public partial class Recomandari : System.Web.UI.Page
                 recomandari_ = Session["recomandari"] as List<Preparat>;
             else
             {    
-                recomandari_ = RecFunctions.Gaseste_recomandari(user.Id, null,4);
+                recomandari_ = RecFunctions.Gaseste_recomandari_Collective(user.Id, null,4);
                 Session["recomandari"] = recomandari_;
             }
             bindRecomandariListViewData();

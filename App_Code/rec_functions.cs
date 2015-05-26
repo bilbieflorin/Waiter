@@ -77,7 +77,7 @@ namespace rec_system
         }
 
         // Recomandari calculate prin Collective Filtering.
-        public static List<Preparat> Gaseste_recomandari(int id_user, Comanda comanda, int k)
+        public static List<Preparat> Gaseste_recomandari_Collective(int id_user, Comanda comanda, int k)
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
             int[] lista_vecini = Calculeaza_vecini(3, id_user);
