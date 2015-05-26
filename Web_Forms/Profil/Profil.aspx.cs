@@ -20,39 +20,39 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
         }
         else
         {
-            EmailLabel.Text = user.Email;
-            LastNameTextBox.Text = user.LastName;
-            FirstNameTextBox.Text = user.FirstName;
-            ConfirmPasswordTextBox.Text = "";
-        }
-
-        if (!IsPostBack)
-        {
-            specifice_ = DatabaseFunctions.getSpecifice();
-            SpecificCheckBoxList.DataSource = specifice_;
-            SpecificCheckBoxList.DataBind();
-
-            if (user.SpecificsList == null)
-                user.Initialize(
-                    user.Id,
-                    user.Email,
-                    user.Password,
-                    user.FirstName,
-                    user.LastName,
-                    user.JoinDate,
-                    user.Type,
-                    DatabaseFunctions.getSpecificsForUser(user.Id)
-                    );
-            specificeAlese_ = user.SpecificsList;
-
-            foreach (String specific in user.SpecificsList)
+            if (!IsPostBack)
             {
-                foreach (ListItem specificItem in SpecificCheckBoxList.Items)
+                
+                specifice_ = DatabaseFunctions.getSpecifice();
+                EmailLabel.Text = user.Email;
+                LastNameTextBox.Text = user.LastName;
+                FirstNameTextBox.Text = user.FirstName;
+                SpecificCheckBoxList.DataSource = specifice_;
+                SpecificCheckBoxList.DataBind();
+                ConfirmPasswordTextBox.Text = "";
+
+                if (user.SpecificsList == null)
+                    user.Initialize(
+                        user.Id,
+                        user.Email,
+                        user.Password,
+                        user.FirstName,
+                        user.LastName,
+                        user.JoinDate,
+                        user.Type,
+                        DatabaseFunctions.getSpecificsForUser(user.Id)
+                        );
+                specificeAlese_ = user.SpecificsList;
+
+                foreach (String specific in user.SpecificsList)
                 {
-                    if (specificItem.Text.Equals(specific))
+                    foreach (ListItem specificItem in SpecificCheckBoxList.Items)
                     {
-                        specificItem.Selected = true;
-                        break;
+                        if (specificItem.Text.Equals(specific))
+                        {
+                            specificItem.Selected = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -87,7 +87,34 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
         Page.Validate();
         if (Page.IsValid)
         {
-            // TODO: Update user info
+            User user = Session["user"] as User;
+            string first_name = (String.IsNullOrEmpty(FirstNameTextBox.Text)) ? null : FirstNameTextBox.Text;
+            string last_name = (String.IsNullOrEmpty(LastNameTextBox.Text)) ? null : LastNameTextBox.Text;
+            List<string> specifics_list = new List<string>();
+            foreach (ListItem specific in SpecificCheckBoxList.Items)
+                if (specific.Selected == true)
+                    specifics_list.Add(specific.Text);
+            if (specifics_list.Count == 0)
+                specifics_list = null;
+            if (
+                !first_name.Equals(user.FirstName) ||
+                !last_name.Equals(user.LastName) ||
+                (specifics_list != null ? specifics_list.Count : 0) 
+                != (user.SpecificsList != null ? user.SpecificsList.Count : 0))
+            {
+                user.Initialize(
+                    user.Id,
+                    user.Email,
+                    user.Password,
+                    first_name,
+                    last_name,
+                    user.JoinDate,
+                    user.Type,
+                    specifics_list
+                    );
+                DatabaseFunctions.updateUser(user);
+                Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
+            }
         }
     }
 

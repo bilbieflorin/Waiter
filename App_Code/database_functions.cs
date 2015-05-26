@@ -148,6 +148,26 @@ namespace db_mapping
             return lista_users;
         }
 
+        public static void updateUser(User user)
+        {
+            SqlConnection update_user_connection = new SqlConnection(connection_string_);
+            update_user_connection.Open();
+            SqlCommand update_user_command = new SqlCommand(
+                                            @"update users
+                                              set first_name = @first_name, last_name = @last_name 
+                                              where id_user = @id_user",
+                                              update_user_connection);
+            update_user_command.Parameters.Add(new SqlParameter("@first_name", user.FirstName));
+            update_user_command.Parameters.Add(new SqlParameter("@last_name", user.LastName));
+            update_user_command.Parameters.Add(new SqlParameter("@id_user", user.Id));
+            update_user_command.ExecuteNonQuery();
+            update_user_connection.Close();
+
+            deleteSpecificsForUser(user.Id);
+            if (user.SpecificsList != null)
+                insertSpecificsForUser(user.Id, user.SpecificsList);
+        }
+
         /// <summary>
         /// Adauga un nou utilizator la baza de date si intoarce id-ul liniei inserate
         /// </summary>
@@ -336,7 +356,7 @@ namespace db_mapping
             }
             data_reader_specifice.Close();
             db_connection_specifice.Close();
-            return lista_specifice;
+            return lista_specifice.Count > 0 ? lista_specifice : null;
         }
 
         /// <summary>
@@ -577,5 +597,19 @@ namespace db_mapping
                 inserare_item_connection.Close();
             }
         }
+
+        private static void deleteSpecificsForUser(int id)
+        {
+            SqlConnection delete_specifics_for_user_connection = new SqlConnection(connection_string_);
+            delete_specifics_for_user_connection.Open();
+            SqlCommand delete_specifics_for_user_command = new SqlCommand(
+                @"delete from prefera
+                  where id_user = @id_user",
+                  delete_specifics_for_user_connection);
+            delete_specifics_for_user_command.Parameters.Add(new SqlParameter("@id_user", id));
+            delete_specifics_for_user_command.ExecuteNonQuery();
+            delete_specifics_for_user_connection.Close();
+        }
+
     }
 } // namespace
