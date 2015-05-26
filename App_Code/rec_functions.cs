@@ -15,11 +15,31 @@ namespace rec_system
 {
     public class RecFunctions
     {
-        // Recomandari calculate prin Content Based Filtering.
-        public List<Preparat> Gaseste_recomandari_ContentBased(int id_user, int k)
+        // Functia principala de calcul a Recomandarilor.
+        public List<Preparat> Recomandari(int id_user, Comanda comanda_actuala, int k)
         {
             IstoricComenzi istoric = DatabaseFunctions.getIstoric(id_user);
-            List<Comanda> comenzi = istoric.ListaComenzi;
+            List<Comanda> istoric_comenzi = istoric.ListaComenzi;
+            List<Preparat> recomandari;
+
+            if (istoric_comenzi.Count > 0)
+            {
+                recomandari = Gaseste_recomandari_ContentBased(id_user, k, istoric_comenzi);
+                recomandari.AddRange(Gaseste_recomandari_Collective(id_user, comanda_actuala,
+                    k));
+            }
+            else
+            {   // Top din DB sau Top dupa specificul ales din formularul de inregistrare.
+                recomandari = Gaseste_recomandari_Top(id_user, k);
+            }
+
+            return recomandari;
+        }
+
+        // Recomandari calculate prin Content Based Filtering.
+        public List<Preparat> Gaseste_recomandari_ContentBased(int id_user, int k,
+            List<Comanda> istoric_comenzi)
+        {
             Dictionary<String, int> dictionar_tipuri = new Dictionary<String,int>();
             Dictionary<String, int> dictionar_specificuri = new Dictionary<String,int>();
 
@@ -30,7 +50,7 @@ namespace rec_system
             Hashtable lista_item_comanda;
             Preparat preparat;
 
-            foreach(Comanda comanda in comenzi)
+            foreach(Comanda comanda in istoric_comenzi)
             {
                 pret_mediu += comanda.Pret;
                 nr_preparate += comanda.NumarPreparate;
@@ -77,7 +97,8 @@ namespace rec_system
         }
 
         // Recomandari calculate prin Collective Filtering.
-        public static List<Preparat> Gaseste_recomandari_Collective(int id_user, Comanda comanda, int k)
+        public static List<Preparat> Gaseste_recomandari_Collective(int id_user, 
+            Comanda comanda, int k)
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
             int[] lista_vecini = Calculeaza_vecini(3, id_user);
