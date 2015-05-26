@@ -58,7 +58,7 @@
                     </EmptyDataTemplate>
                 </asp:ListView>
                 <div class="row-fluid text-center" style="margin-bottom: 10px">
-                    <asp:DataPager ID="RecomandariDataPager" runat="server" PagedControlID="RecomandariListView" PageSize="2">
+                    <asp:DataPager ID="RecomandariDataPager" runat="server" PagedControlID="RecomandariListView" PageSize="1">
                         <Fields>
                             <asp:NextPreviousPagerField PreviousPageText="Inapoi" 
                                  ShowNextPageButton="false" ShowLastPageButton="false" ShowPreviousPageButton="true"

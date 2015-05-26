@@ -20,12 +20,15 @@ public partial class Recomandari : System.Web.UI.Page
         {
             HtmlGenericControl recomandari = (HtmlGenericControl)Master.FindControl("RecomandariHyperLink");
             recomandari.Attributes["class"] += "active";
-            if (!IsPostBack)
-            {
-                User user = Session["user"] as User;
+            User user = Session["user"] as User;
+            if(IsPostBack)
+                recomandari_ = Session["recomandari"] as List<Preparat>;
+            else
+            {    
                 recomandari_ = RecFunctions.Gaseste_recomandari(user.Id, null);
-                bindRecomandariListViewData();
+                Session["recomandari"] = recomandari_;
             }
+            bindRecomandariListViewData();
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "", "$('.nbsp').each(function() {$(this).before($('<span>').html('&nbsp;')); $(this).after($('<span>').html('&nbsp;'));});", true);
         }
     }
@@ -109,5 +112,5 @@ public partial class Recomandari : System.Web.UI.Page
         RecomandariListView.DataBind();
     }
 
-    private static List<Preparat> recomandari_;
+    private List<Preparat> recomandari_;
 }

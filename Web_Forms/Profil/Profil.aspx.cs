@@ -21,8 +21,7 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
         else
         {
             if (!IsPostBack)
-            {
-                
+            {  
                 specifice_ = DatabaseFunctions.getSpecifice();
                 EmailLabel.Text = user.Email;
                 LastNameTextBox.Text = user.LastName;

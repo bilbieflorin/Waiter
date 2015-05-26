@@ -91,6 +91,7 @@ namespace db_mapping
                 return true;
             return false;
         }
+
         public override int GetHashCode()
         {
             return this.Id;
