@@ -15,25 +15,13 @@ namespace db_mapping
         public IstoricComenzi(int user_id = -100000)
         {
             id_user_ = user_id;
-            lista_comenzi_ = new List<Comanda>();
+            lista_item_comanda_ = new List<Comanda>();
         }
 
         public void addComanda(Comanda comanda)
         {
-            lista_comenzi_.Add(comanda);
+            lista_item_comanda_.Add(comanda);
 
-        }
-
-        public bool continePreparat(Preparat preparat)
-        {
-            foreach (var comanda in ListaComenzi)
-            {
-                if (comanda.ListaItem[preparat.Id] != null)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         // Getteri.
@@ -42,12 +30,12 @@ namespace db_mapping
             get { return id_user_; }
         }
 
-        public List<Comanda> ListaComenzi
+        public List<Comanda> ListaItemComanda
         {
-            get { return lista_comenzi_; }
+            get { return lista_item_comanda_; }
         }
 
-        private List<Comanda> lista_comenzi_;
+        private List<Comanda> lista_item_comanda_;
         int id_user_;
     }
 

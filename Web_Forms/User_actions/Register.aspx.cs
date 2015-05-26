@@ -111,9 +111,9 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
                 DateTime.Now,
                 "CLIENT",
                 specifics_list);
-            int id = DatabaseFunctions.insertUser(user);
+            DatabaseFunctions.insertUser(user);
             user.Initialize(
-                id, 
+                DatabaseFunctions.getUserIdByEmail(email), 
                 email, 
                 password, 
                 first_name, 

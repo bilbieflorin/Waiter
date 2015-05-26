@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
@@ -19,13 +18,9 @@ namespace rec_system
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
             int[] lista_vecini = Calculeaza_vecini(3, id_user);
-            List<IstoricComenzi> lista_istorice = DatabaseFunctions.istoricUtilizatori(lista_vecini);
-            IstoricComenzi istoric_user = DatabaseFunctions.getIstoric(id_user); 
-            //eliminare preparate comandate
-            //eliminare cele a caror ora nu apartine intervalului curent
             List<Preparat> recomandari = new List<Preparat>();
 
-            return eliminaComandate(lista_istorice,istoric_user);
+            return recomandari;
         }
 
         public static int[] Calculeaza_vecini(int k, int id_user)
@@ -38,7 +33,10 @@ namespace rec_system
 
             foreach (KeyValuePair<int, List<int>> entry in toatePrep)
             {
+                if (entry.Value.Count > 0)
+                {
                     signatures.Add(entry.Key, entry.Value.ToArray());
+                }
             }
 
             // Extragem vectorul specific clientului cu id-ul id_user.
@@ -64,7 +62,7 @@ namespace rec_system
                 results.Add(signatures_entry.Key, jaccard);
             }
 
-            int[] vecini = new int[k];
+            int[] vecini = new int[k + 1];
             for (int index = 0; index < k; index++)
             {
                 vecini[index] = results.MaxBy(x => x.Value).Key;
@@ -73,27 +71,6 @@ namespace rec_system
 
             return vecini;
 
-        }
-
-        private static List<Preparat> eliminaComandate(List<IstoricComenzi> istorice, IstoricComenzi istoric_user)
-        {
-            HashSet<Preparat> preparate = new HashSet<Preparat>();
-           
-            foreach (var istoric in istorice)
-            {
-                foreach (var comanda in istoric.ListaComenzi)
-                {
-                    foreach ( DictionaryEntry item in comanda.ListaItem)
-                    {
-                        ItemComanda item_comanda = item.Value as ItemComanda;
-                        if (!istoric_user.continePreparat(item_comanda.Preparat))
-                        {
-                            preparate.Add(item_comanda.Preparat);
-                        }
-                    }
-                }
-            }
-            return preparate.ToList();
         }
     }
 } // namespace
