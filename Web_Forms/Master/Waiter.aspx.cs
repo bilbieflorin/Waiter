@@ -13,6 +13,8 @@ public partial class Web_Forms_Master_Waiter : System.Web.UI.Page
         {
             LoginButton.Visible = false;
             RegisterButton.Visible = false;
+            RecomandariLink.Visible = true;
+            ContactLink.Visible = true;
         }
     }
 }

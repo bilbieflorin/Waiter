@@ -417,10 +417,10 @@ namespace db_mapping
                 int id_user = preparate_comandate_reader.GetInt32(0);
                 int id_preparat = preparate_comandate_reader.GetInt32(1);
                 int cantitate = preparate_comandate_reader.GetInt32(2);
-                for (int i = 1; i <= cantitate; i++)
-                {
+                //for (int i = 1; i <= cantitate; i++)
+                //{
                     dictionar[id_user].Add(id_preparat);
-                }
+                //}
             }
             preparate_comandate_reader.Close();
             preparate_comandate_connection.Close();

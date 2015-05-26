@@ -34,7 +34,7 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li runat="server" id="MeniuHyperLink">
                             <asp:HyperLink runat="server" NavigateUrl="../Menu/Meniu.aspx">Meniu</asp:HyperLink></li>
-                        <li id="RecomandariHyperLink" runat="server">
+                        <li id="RecomandariHyperLink" visible="false" runat="server">
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/Menu/Recomandari.aspx">Recomandari</asp:HyperLink></li>
                         <li id="AdminHyperLink" visible="false" runat="server">
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/Admin/Admin.aspx">Admin</asp:HyperLink></li>
@@ -43,9 +43,9 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li id="ProfilHyperLink" runat="server">
-                            <asp:HyperLink ID="RealProfilHyperLink" runat="server">Conectat ca <span id="ProfilHyperLinkSpan" runat="server" style="color:black"></span></asp:HyperLink>
+                            <asp:HyperLink ID="RealProfilHyperLink" runat="server"></asp:HyperLink>
                         </li>
-                        <li id="ComandaHyperLink" runat="server">
+                        <li id="ComandaHyperLink" visible="false" runat="server">
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/User_actions/Comanda.aspx">Comanda mea 
                                <asp:ScriptManager EnablePartialRendering="true" ID="BadgeScriptManager" runat="server"></asp:ScriptManager>
                                  <asp:UpdatePanel style="display:inline" UpdateMode="Conditional" ID="BadgeUpdatePanel" runat="server">

@@ -45,12 +45,18 @@ public partial class Meniu : System.Web.UI.Page
             ModalItemTitle.Text = preparat.Denumire;
             ModalItemImage.ImageUrl = preparat.PathImagine;
             string ingrediente =" ";
-            int i;
-            for(i=0; i < preparat.ListaIngrediente.Count-1; i++)
+
+            if (preparat.ListaIngrediente.Capacity > 0)
             {
-                ingrediente+=preparat.ListaIngrediente[i]+", ";
+                int i;
+                for (i = 0; i < preparat.ListaIngrediente.Count - 1; i++)
+                {
+                    ingrediente += preparat.ListaIngrediente[i] + ", ";
+                }
+                ingrediente += preparat.ListaIngrediente[i] + ".";
             }
-            ingrediente += preparat.ListaIngrediente[i]+".";
+            else
+                ingrediente = "None";
             ModalItemBody.InnerHtml = "Specific: " + preparat.Specific + "<br />" + "Tip: " + preparat.Tip + "<br />" + "Gramaj: " + preparat.Gramaj + "<br />" + "Pret: " + preparat.Pret
                 + "<br />Ingrediente: "+ingrediente;
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
@@ -61,27 +67,35 @@ public partial class Meniu : System.Web.UI.Page
     
     protected void buttonComandaClick(object sender, EventArgs e)
     {
-        Comanda comanda = Session["comanda"] as Comanda;
-        if (comanda == null)
+        if (Session["user"] == null)
         {
-            User user = Session["user"] as User;
-            comanda = new Comanda();
-            if (user == null)
-                comanda.IdUser=0;
-            else
-                comanda.IdUser = user.Id;
-            comanda.Data = DateTime.Now;
+            Session["error"] = "Trebuie sa fi autentificat pentru a putea comanda";
+            Response.Redirect("../../Web_Forms/User_actions/Login.aspx");
         }
-        Button order_button = sender as Button;
-        int index_meniu = Convert.ToInt32(order_button.CommandArgument);
-        ItemComanda item = new ItemComanda(meniu_[index_meniu], 1);
-        comanda.addItemComanda(item);
-        Session["comanda"] = comanda;
-        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal('hide')", true);
-        Label badge = Master.FindControl("Badge") as Label;
-        UpdatePanel update_badge = Master.FindControl("BadgeUpdatePanel") as UpdatePanel;
-        badge.Text = comanda.NumarPreparate + "";
-        update_badge.Update();
+        else
+        {
+            Comanda comanda = Session["comanda"] as Comanda;
+            if (comanda == null)
+            {
+                User user = Session["user"] as User;
+                comanda = new Comanda();
+                if (user == null)
+                    comanda.IdUser = 0;
+                else
+                    comanda.IdUser = user.Id;
+                comanda.Data = DateTime.Now;
+            }
+            Button order_button = sender as Button;
+            int index_meniu = Convert.ToInt32(order_button.CommandArgument);
+            ItemComanda item = new ItemComanda(meniu_[index_meniu], 1);
+            comanda.addItemComanda(item);
+            Session["comanda"] = comanda;
+            ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal('hide')", true);
+            Label badge = Master.FindControl("Badge") as Label;
+            UpdatePanel update_badge = Master.FindControl("BadgeUpdatePanel") as UpdatePanel;
+            badge.Text = comanda.NumarPreparate + "";
+            update_badge.Update();
+        }
     }
 
     protected void meniuListViewPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)

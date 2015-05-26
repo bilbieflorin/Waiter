@@ -13,11 +13,11 @@ public partial class WaiterMasterPage : System.Web.UI.MasterPage
         User user = Session["user"] as User;
         if (user != null)
         {
-            ProfilHyperLinkSpan.InnerText = String.IsNullOrEmpty(user.FullName) ? "Anonim" : user.FullName;
             RealProfilHyperLink.NavigateUrl = "../../Web_Forms/Profil/Profil.aspx";
-
+            RealProfilHyperLink.Text = "Conectat ca "+(String.IsNullOrEmpty(user.FullName) ? user.Email : user.FullName);
+            RecomandariHyperLink.Visible = true;
+            ComandaHyperLink.Visible = true;
             LogoutHyperLink.Visible = true;
-
             if (user.Type.Equals("ADMIN"))
             {
                 AdminHyperLink.Visible = true;
@@ -25,7 +25,7 @@ public partial class WaiterMasterPage : System.Web.UI.MasterPage
         }
         else
         {
-            ProfilHyperLinkSpan.InnerText = "Vizitator";
+            RealProfilHyperLink.Text = "Neconectat";
             RealProfilHyperLink.NavigateUrl = "../../Web_Forms/User_actions/Login.aspx";
         }
 

@@ -13,11 +13,16 @@ public partial class ComandaWebPage : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        HtmlGenericControl comandaHyperLink = (HtmlGenericControl)Master.FindControl("ComandaHyperLink");
-        Label badge = Master.FindControl("Badge") as Label;
-        badge.Attributes["style"] = "background: #cf262e;";
-        comandaHyperLink.Attributes["class"] += "active";
-        bindComandaListView();
+        if (Session["user"] == null)
+            Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
+        else
+        {
+            HtmlGenericControl comandaHyperLink = (HtmlGenericControl)Master.FindControl("ComandaHyperLink");
+            Label badge = Master.FindControl("Badge") as Label;
+            badge.Attributes["style"] = "background: #cf262e;";
+            comandaHyperLink.Attributes["class"] += "active";
+            bindComandaListView();
+        }
     }
 
     protected void deleteItemComanda(object sender, EventArgs e)

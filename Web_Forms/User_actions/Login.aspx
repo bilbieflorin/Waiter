@@ -6,7 +6,7 @@
     <div class="panel-heading page-header text-center"><h1>Autentificare</h1></div>
     <div class="panel-body">
         <div id="status" runat="server" class="alert alert-danger text-center">
-            <p>Adresa de email/parola invalida!</p>
+            <p id="errormessage" runat="server">Adresa de email/parola invalida!</p>
         </div>
         <div class="form-group" id="emailformgroup" runat="server">
             <label class="control-label">Adresa email</label>

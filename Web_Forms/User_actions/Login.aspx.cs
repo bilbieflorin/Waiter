@@ -15,6 +15,12 @@ public partial class Web_Forms_User_actions_Login : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         status.Visible = false;
+        if (Session["error"] != null)
+        {
+            errormessage.InnerText = Session["error"].ToString();
+            status.Visible = true;
+            Session["error"] = null;
+        }
     }
 
     protected void emailServerValidate(object source, ServerValidateEventArgs args)

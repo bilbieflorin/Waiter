@@ -14,15 +14,20 @@ public partial class Recomandari : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        HtmlGenericControl recomandari = (HtmlGenericControl)Master.FindControl("RecomandariHyperLink");
-        recomandari.Attributes["class"] += "active";
-        if (!IsPostBack)
+        if (Session["user"] == null)
+            Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
+        else
         {
-            User user = Session["user"] as User;
-            recomandari_ = RecFunctions.Gaseste_recomandari(user.Id, null);
-            bindRecomandariListViewData();
+            HtmlGenericControl recomandari = (HtmlGenericControl)Master.FindControl("RecomandariHyperLink");
+            recomandari.Attributes["class"] += "active";
+            if (!IsPostBack)
+            {
+                User user = Session["user"] as User;
+                recomandari_ = RecFunctions.Gaseste_recomandari(user.Id, null);
+                bindRecomandariListViewData();
+            }
+            ScriptManager.RegisterStartupScript(Page, Page.GetType(), "", "$('.nbsp').each(function() {$(this).before($('<span>').html('&nbsp;')); $(this).after($('<span>').html('&nbsp;'));});", true);
         }
-        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "", "$('.nbsp').each(function() {$(this).before($('<span>').html('&nbsp;')); $(this).after($('<span>').html('&nbsp;'));});", true);
     }
 
     protected void recomandariListItemImagineClick(object sender, ImageClickEventArgs e)
@@ -45,12 +50,17 @@ public partial class Recomandari : System.Web.UI.Page
             ModalItemTitle.Text = preparat.Denumire;
             ModalItemImage.ImageUrl = preparat.PathImagine;
             string ingrediente = " ";
-            int i;
-            for (i = 0; i < preparat.ListaIngrediente.Count - 1; i++)
+            if (preparat.ListaIngrediente.Capacity > 0)
             {
-                ingrediente += preparat.ListaIngrediente[i] + ", ";
+                int i;
+                for (i = 0; i < preparat.ListaIngrediente.Count - 1; i++)
+                {
+                    ingrediente += preparat.ListaIngrediente[i] + ", ";
+                }
+                ingrediente += preparat.ListaIngrediente[i] + ".";
             }
-            ingrediente += preparat.ListaIngrediente[i] + ".";
+            else
+                ingrediente = "None";
             ModalItemBody.InnerHtml = "Specific: " + preparat.Specific + "<br />" + "Tip: " + preparat.Tip + "<br />" + "Gramaj: " + preparat.Gramaj + "<br />" + "Pret: " + preparat.Pret
                 + "<br />Ingrediente: " + ingrediente;
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
