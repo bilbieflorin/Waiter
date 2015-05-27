@@ -79,7 +79,6 @@ public partial class Test : System.Web.UI.Page
         foreach (var p in prep)
         {
             Label label = new Label();
-            label.Text += p.toString() + " " + prep.Count;
             HtmlGenericControl br = new HtmlGenericControl("br");
             show_content.Controls.Add(label);
             show_content.Controls.Add(br);

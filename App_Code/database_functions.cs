@@ -397,8 +397,9 @@ namespace db_mapping
             command.Parameters.Add(new SqlParameter("@id",id_user));
             command.Parameters.Add(new SqlParameter("@id_prep", id_preparat));
             SqlDataReader reader = command.ExecuteReader();
-            reader.Read();
-            int nr = Convert.ToInt32(reader.GetInt32(0))+1;
+            int nr = 0;
+            if (reader.Read())
+                nr = Convert.ToInt32(reader.GetInt32(0)) + 1;
             reader.Close();
             connection.Close();
             return nr;

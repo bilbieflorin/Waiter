@@ -43,7 +43,7 @@ namespace rec_system
 
             // Calculam pretul mediu al unei comenzi, tipul si specificul preferate.
             double pret_mediu = 0;
-            int nr_preparate = 0, value = 0;
+            int nr_preparate = 0;
             String specific = "", tip = "";
             Hashtable lista_item_comanda;
             Preparat preparat;
@@ -93,7 +93,7 @@ namespace rec_system
                 pret_mediu = pret_mediu / nr_preparate;
             }
 
-            recomandari = preparateDupaParametri(specific, tip, pret_mediu, k);
+            recomandari = preparateDupaParametri(id_user,specific,tip, pret_mediu, k);
             return recomandari;
         }
 
@@ -170,37 +170,43 @@ namespace rec_system
                     foreach (DictionaryEntry item in com.ListaItem)
                     {
                         ItemComanda item_comanda = item.Value as ItemComanda;
-                        if (!comanda.ListaItem.ContainsKey(item_comanda.Preparat.Id))
-                            if (!istoric_user.continePreparat(item_comanda.Preparat))
-                            {
-                                preparate.Add(item_comanda.Preparat);
-                            }
-                            else
-                            {
-                                int nr = DatabaseFunctions.numarComandariPreparat(istoric_user.IdUser, item_comanda.Preparat.Id);
-                                if(avg >= nr)
-                                    preparate.Add(item_comanda.Preparat);
-                            }
+                        int nr = DatabaseFunctions.numarComandariPreparat(istoric_user.IdUser, item_comanda.Preparat.Id);
+                        if (!comanda.ListaItem.ContainsKey(item_comanda.Preparat.Id) && avg >= nr)
+                        {
+                            preparate.Add(item_comanda.Preparat);
+                        }
                     }
                 }
             }
             return preparate.ToList();
         }
 
-        private static List<Preparat> preparateDupaParametri(String specific, String tip, double pret_mediu, int k)
+        private static List<Preparat> preparateDupaParametri(int id_user,String specific,String tip, double pret_mediu, int k)
         {
             List<Preparat> lista_preparate = new List<Preparat>();
             lista_preparate = DatabaseFunctions.preparateDupaPret(pret_mediu);
-            List<Preparat> preparate = intersectie(specific,tip,lista_preparate);
+            List<Preparat> preparate = intersectie(id_user,specific,tip,lista_preparate);
             if (preparate.Count < k)
             {
                 foreach (var preparat in preparate)
                 {
                     lista_preparate.Remove(preparat);
                 }
+                int avg = DatabaseFunctions.numarMediuComandariPreparat(id_user);
                 foreach (var preparat in lista_preparate)
                 {
-                    if (preparat.Tip.Equals(tip) || preparat.Specific.Equals(specific))
+                    int nr = DatabaseFunctions.numarComandariPreparat(id_user, preparat.Id);
+                    if (preparat.Tip.Equals(tip) && nr < avg)
+                    {
+                         preparate.Add(preparat);
+                    }
+                    if (preparate.Count == k)
+                        break;
+                }
+                foreach (var preparat in lista_preparate)
+                {
+                    int nr = DatabaseFunctions.numarComandariPreparat(id_user, preparat.Id);
+                    if (preparat.Specific.Equals(specific) && nr < avg)
                     {
                         preparate.Add(preparat);
                     }
@@ -211,12 +217,14 @@ namespace rec_system
             return preparate;
         }
 
-        private static List<Preparat> intersectie(String specific, String tip, List<Preparat> lista_preparate)
+        private static List<Preparat> intersectie(int id_user,String specific, String tip, List<Preparat> lista_preparate)
         {
             List<Preparat> preparate = new List<Preparat>();
+            int avg = DatabaseFunctions.numarMediuComandariPreparat(id_user);
             foreach(var preparat in lista_preparate)
             {
-                if (preparat.Tip.Equals(tip) && preparat.Specific.Equals(specific))
+                int nr = DatabaseFunctions.numarComandariPreparat(id_user, preparat.Id);
+                if (preparat.Tip.Equals(tip) && preparat.Specific.Equals(specific)&& nr < avg)
                 {
                     preparate.Add(preparat);
                 }
