@@ -855,5 +855,22 @@ namespace db_mapping
             delete_specifics_for_user_command.ExecuteNonQuery();
             delete_specifics_for_user_connection.Close();
         }
+
+        public static int numarUtilizatori() 
+        {
+            int count;
+            SqlConnection users_count_connection = new SqlConnection(connection_string_);
+            users_count_connection.Open();
+            SqlCommand users_count_command = new SqlCommand(@"select count(*)
+                                                              from users", users_count_connection);
+            SqlDataReader users_count_reader = users_count_command.ExecuteReader();
+            users_count_reader.Read();
+            count = users_count_reader.GetInt32(0);
+            users_count_reader.Close();
+            users_count_connection.Close();
+
+            return count;
+
+        }
     }
 } // namespace
