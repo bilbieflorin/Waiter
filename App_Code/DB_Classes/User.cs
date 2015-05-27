@@ -16,12 +16,13 @@ namespace db_mapping
         {
             id_ = UninitializedInt;
             email_ = password_ = first_name_ = last_name_ = null;
+            type_ = "CLIENT";
             specifics_list_ = null;
             join_date_ = default(DateTime);
         }
 
         public void Initialize(int id , String email , String password, String first_name = null, 
-            String last_name = null, DateTime join_date = default(DateTime), List<String> specifics_list = null)
+            String last_name = null, DateTime join_date = default(DateTime), String type = "CLIENT", List<String> specifics_list = null)
         {
             id_ = id;
             email_ = email;
@@ -29,6 +30,7 @@ namespace db_mapping
             first_name_ = first_name;
             last_name_ = last_name;
             join_date_ = join_date;
+            type_ = type;
             specifics_list_ = specifics_list;
         }
 
@@ -49,6 +51,7 @@ namespace db_mapping
                 user += "Password = " + password_ + " ";
                 user += "First Name = " + first_name_ + " ";
                 user += "Last Name = " + last_name_ + " ";
+                user += "Type = " + type_ + " ";
                 user += "Join Date = " + join_date_ + "\n";
             }
             return user;
@@ -80,9 +83,14 @@ namespace db_mapping
             get { return password_; }
         }
 
-        public DateTime getJoinDate()
+        public String Type
         {
-            return join_date_;
+            get { return type_; }
+        }
+
+        public DateTime JoinDate
+        {
+            get { return join_date_; }
         }
 
         public List<String> SpecificsList
@@ -95,6 +103,7 @@ namespace db_mapping
         private String first_name_;
         private String last_name_;
         private String password_;
+                private String type_;
         private List<String> specifics_list_;
         private DateTime join_date_;
     }

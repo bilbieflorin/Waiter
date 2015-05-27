@@ -80,13 +80,39 @@ namespace db_mapping
             return lista_preparate;
         }
 
+        public static List<Ingredient> getIngrediente(String connection_string)
+        {
+            List<Ingredient> lista_ingrediente = new List<Ingredient>();
+            SqlConnection db_connection_ingrediente = new SqlConnection(connection_string);
+            db_connection_ingrediente.Open();
+
+            SqlCommand fetch_ingrediente = new SqlCommand(@"select id_ingredient, denumire
+                                                            from ingrediente", db_connection_ingrediente);
+
+            SqlDataReader data_reader_ingredient = fetch_ingrediente.ExecuteReader();
+
+            while (data_reader_ingredient.Read())
+            {
+                int id = data_reader_ingredient.GetInt32(0);
+                String denumire = data_reader_ingredient.GetString(1);
+
+                Ingredient ingredient = new Ingredient();
+                ingredient.Initialize(id, denumire);
+                lista_ingrediente.Add(ingredient);
+            }
+            data_reader_ingredient.Close();
+            db_connection_ingrediente.Close();
+
+            return lista_ingrediente;
+        }
+
         public static List<User> getUsers(String connection_string)
         {
             List<User> lista_users = new List<User>();
             SqlConnection db_connection_user = new SqlConnection(connection_string);
             db_connection_user.Open();
 
-            SqlCommand fatch_users = new SqlCommand(@"select id_user, email, password, first_name, last_name, join_date 
+            SqlCommand fatch_users = new SqlCommand(@"select id_user, email, password, first_name, last_name, join_date, type 
                                                     from users", db_connection_user);
 
             SqlDataReader data_reader_user = fatch_users.ExecuteReader();
@@ -98,6 +124,7 @@ namespace db_mapping
                 String email = data_reader_user.GetString(1);
                 String password = data_reader_user.GetString(2);
                 String first_name = null;
+                String type = data_reader_user.GetString(6);
                 if (!data_reader_user.IsDBNull(3))
                 {
                     first_name = data_reader_user.GetString(3);
@@ -110,7 +137,7 @@ namespace db_mapping
                 DateTime join_date = data_reader_user.GetDateTime(5);
 
                 User user = new User();
-                user.Initialize(id, email, password, first_name, last_name, join_date);
+                user.Initialize(id, email, password, first_name, last_name, join_date, type);
                 lista_users.Add(user);
             }
             data_reader_user.Close();
@@ -137,12 +164,65 @@ namespace db_mapping
                 insert_user_command.Parameters.Add(new SqlParameter("@last_name", (object)DBNull.Value));
             else
                 insert_user_command.Parameters.Add(new SqlParameter("@last_name", user.LastName));
-            insert_user_command.Parameters.Add(new SqlParameter("@date", user.getJoinDate()));
+            insert_user_command.Parameters.Add(new SqlParameter("@date", user.JoinDate));
             insert_user_command.ExecuteNonQuery();
             insert_user_connection.Close();
             int id = getUserIdByEmail(user.Email, connection_string);
             if (user.SpecificsList != null)
                 insertSpecificsForUser(id, user.SpecificsList, connection_string);
+        }
+
+        public static int insertIngredient(Ingredient ingredient, string connection_string)
+        {
+            SqlConnection insert_ingredient_connection = new SqlConnection(connection_string);
+            insert_ingredient_connection.Open();
+
+            SqlCommand insert_ingredient_command = new SqlCommand(
+                                           @"insert into ingrediente values(@denumire); SELECT SCOPE_IDENTITY();", 
+                                           insert_ingredient_connection);
+            insert_ingredient_command.Parameters.Add(new SqlParameter(@"denumire", ingredient.Denumire));
+
+            int id_ingredient = Convert.ToInt32(insert_ingredient_command.ExecuteScalar());
+            insert_ingredient_connection.Close();
+
+            return id_ingredient;
+        }
+
+        public static void insertPreparatContineIngredient(int id_preparat, int id_ingredient, string connection_string)
+        {
+            SqlConnection insert_contine_connection = new SqlConnection(connection_string);
+            insert_contine_connection.Open();
+
+            SqlCommand insert_contine_command = new SqlCommand(
+                @"insert into contine (id_preparat, id_ingredient) values(@id_preparat, @id_ingredient)",
+                insert_contine_connection);
+            insert_contine_command.Parameters.Add(new SqlParameter(@"id_preparat", id_preparat));
+            insert_contine_command.Parameters.Add(new SqlParameter(@"id_ingredient", id_ingredient));
+            insert_contine_command.ExecuteNonQuery();
+            insert_contine_connection.Close();
+        }
+
+        public static int insertPreparat(Preparat preparat, String connection_string)
+        {
+            SqlConnection insert_preparat_connection = new SqlConnection(connection_string);
+            insert_preparat_connection.Open();
+            SqlCommand insert_preparat_command = new SqlCommand("insert into preparate values(@denumire_preparat, @path, @tip_preparat, @gramaj, @pret, @id_specific, @data_adaugare); SELECT SCOPE_IDENTITY();", 
+                                                                insert_preparat_connection);
+            insert_preparat_command.Parameters.Add(new SqlParameter(@"denumire_preparat", preparat.Denumire));
+            if (preparat.PathImagine == null)
+                insert_preparat_command.Parameters.Add(new SqlParameter(@"path", (object)DBNull.Value));
+            else
+                insert_preparat_command.Parameters.Add(new SqlParameter(@"path", preparat.PathImagine));
+            insert_preparat_command.Parameters.Add(new SqlParameter(@"tip_preparat", preparat.Tip));
+            insert_preparat_command.Parameters.Add(new SqlParameter(@"gramaj", preparat.Gramaj));
+            insert_preparat_command.Parameters.Add(new SqlParameter(@"pret", preparat.Pret));
+            insert_preparat_command.Parameters.Add(new SqlParameter(@"id_specific", getSpecificId(preparat.Specific, connection_string)));
+            insert_preparat_command.Parameters.Add(new SqlParameter(@"data_adaugare", preparat.DataAdaugare));
+
+            int id_preparat = Convert.ToInt32(insert_preparat_command.ExecuteScalar());
+            insert_preparat_connection.Close();
+
+            return id_preparat;
         }
 
         public static int getUserIdByEmail(String email, String connection_string)
@@ -224,6 +304,7 @@ namespace db_mapping
                     (get_user_reader.IsDBNull(3)) ? null : get_user_reader.GetString(3),
                     (get_user_reader.IsDBNull(4)) ? null : get_user_reader.GetString(4),
                     get_user_reader.GetDateTime(5),
+                    get_user_reader.GetString(6),
                     null);
             }
             get_user_reader.Close();

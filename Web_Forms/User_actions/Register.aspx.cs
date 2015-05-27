@@ -109,7 +109,8 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
                 password, 
                 first_name, 
                 last_name, 
-                DateTime.Now, 
+                DateTime.Now,
+                "CLIENT",
                 specifics_list);
             DatabaseFunctions.insertUser(user, connection_string_);
             user.Initialize(
@@ -118,7 +119,8 @@ public partial class Web_Forms_User_actions_Register : System.Web.UI.Page
                 password, 
                 first_name, 
                 last_name, 
-                DateTime.Now, 
+                DateTime.Now,
+                "CLIENT",
                 specifics_list);
             Session["user"] = user;
             Response.Redirect("../../Web_Forms/Master/Waiter.aspx");

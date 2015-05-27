@@ -10,8 +10,16 @@ public partial class WaiterMasterPage : System.Web.UI.MasterPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["user"] != null)
+        User user = Session["user"] as User;
+        if (user != null)
+        {
             LogoutHyperLink.Visible = true;
+
+            if (user.Type.Equals("ADMIN"))
+            {
+                AdminHyperLink.Visible = true;
+            }
+        }
         Comanda comanda = Session["comanda"] as Comanda;
         Badge.Text = Convert.ToString( (comanda != null) ? comanda.NumarPreparate : 0);
         Page.ClientScript.RegisterStartupScript(Page.GetType(), "Data-toogle", 
