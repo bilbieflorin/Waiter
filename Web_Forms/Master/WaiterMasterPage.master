@@ -38,8 +38,8 @@
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/Menu/Recomandari.aspx">Recomandari</asp:HyperLink></li>
                         <li id="AdminHyperLink" visible="false" runat="server">
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/Admin/Admin.aspx">Admin</asp:HyperLink></li>
-                        <li>
-                            <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/Test/Test.aspx">Test</asp:HyperLink></li>
+                        <li visible="false">
+                            <asp:HyperLink Visible="false" runat="server" NavigateUrl="../../Web_Forms/Test/Test.aspx">Test</asp:HyperLink></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li id="ProfilHyperLink" runat="server">

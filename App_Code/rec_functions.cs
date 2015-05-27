@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +50,7 @@ namespace rec_system
         }
 
         // Recomandari calculate prin Content Based Filtering.
-        public static List<Preparat> Gaseste_recomandari_ContentBased(int id_user, int k, List<Comanda> istoric_comenzi)
+        private static List<Preparat> Gaseste_recomandari_ContentBased(int id_user, int k, List<Comanda> istoric_comenzi)
         {
             Dictionary<String, int> dictionar_tipuri = new Dictionary<String,int>();
             Dictionary<String, int> dictionar_specificuri = new Dictionary<String,int>();
@@ -112,10 +112,18 @@ namespace rec_system
         }
 
         // Recomandari calculate prin Collective Filtering.
-        public static List<Preparat> Gaseste_recomandari_Collective(int id_user, Comanda comanda, int k)
+        private static List<Preparat> Gaseste_recomandari_Collective(int id_user, Comanda comanda, int k)
         {
             // Gasim cei mai similari k vecini pentru userul cu id-ul user_id.
-            int[] lista_vecini = Calculeaza_vecini(3, id_user);
+            int[] lista_vecini ;
+            if (DatabaseFunctions.numarUtilizatori() < 1000)
+            {
+                lista_vecini = Calculeaza_vecini(3, id_user);
+            }
+            else
+            {
+                lista_vecini = Calculeaza_vecini_LSH(3, id_user);
+            }
             List<IstoricComenzi> lista_istorice = DatabaseFunctions.istoricUtilizatori(lista_vecini);
             IstoricComenzi istoric_user = DatabaseFunctions.getIstoric(id_user);
             // Eliminare preparate comandate.
@@ -126,7 +134,7 @@ namespace rec_system
             return recomandari;
         }
 
-        public static int[] Calculeaza_vecini(int k, int id_user)
+        private static int[] Calculeaza_vecini(int k, int id_user)
         {
             // Extragem din DB un Dictionary de toate id utilizator, lista de preparate
             // comandate.
@@ -173,7 +181,7 @@ namespace rec_system
 
         }
 		
-		 public static int[] Calculeaza_vecini_LSH(int k, int id_user)
+		private static int[] Calculeaza_vecini_LSH(int k, int id_user)
         {
             // Extragem din DB un Dictionary de toate id utilizator, lista de preparate
             // comandate.
