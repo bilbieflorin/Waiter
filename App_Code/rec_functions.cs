@@ -16,7 +16,7 @@ namespace rec_system
     public class RecFunctions
     {
         // Functia principala de calcul a Recomandarilor.
-        public List<Preparat> Recomandari(int id_user, Comanda comanda_actuala, int k)
+        public static List<Preparat> Recomandari(int id_user, Comanda comanda_actuala, int k)
         {
             IstoricComenzi istoric = DatabaseFunctions.getIstoric(id_user);
             List<Comanda> istoric_comenzi = istoric.ListaComenzi;
@@ -24,13 +24,27 @@ namespace rec_system
 
             if (istoric_comenzi.Count > 0)
             {
-                recomandari = Gaseste_recomandari_ContentBased(id_user, k, istoric_comenzi);
-                recomandari.AddRange(Gaseste_recomandari_Collective(id_user, comanda_actuala,
-                    k));
+                recomandari = Gaseste_recomandari_ContentBased(id_user, k/2, istoric_comenzi);
+                List<Preparat> recomandari_collective = Gaseste_recomandari_Collective(id_user, comanda_actuala, k);
+                foreach (var preparat in recomandari_collective)
+                {
+                    if (recomandari.Count == k)
+                    {
+                        break;
+                    }
+                    if (!recomandari.Contains(preparat))
+                    {
+                        recomandari.Add(preparat);
+                    }
+                }
             }
             else
-            {   // Top din DB sau Top dupa specificul ales din formularul de inregistrare.
-                //recomandari = Gaseste_recomandari_Top(id_user, k);
+            {
+                List<String> lista_specifice = DatabaseFunctions.getSpecificsForUser(id_user);
+                if (lista_specifice == null)
+                    recomandari = DatabaseFunctions.topKPreparate(k);
+                else
+                    recomandari = DatabaseFunctions.topKPreparateSpecific(lista_specifice, k);
             }
             return recomandari;
         }
@@ -205,13 +219,14 @@ namespace rec_system
                 }
                 foreach (var preparat in lista_preparate)
                 {
+                    if (preparate.Count == k)
+                        break;
                     int nr = DatabaseFunctions.numarComandariPreparat(id_user, preparat.Id);
                     if (preparat.Specific.Equals(specific) && nr < avg)
                     {
                         preparate.Add(preparat);
                     }
-                    if (preparate.Count == k)
-                        break;
+                   
                 }
             }
             return preparate;

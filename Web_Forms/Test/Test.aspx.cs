@@ -79,6 +79,7 @@ public partial class Test : System.Web.UI.Page
         foreach (var p in prep)
         {
             Label label = new Label();
+            label.Text = p.toString() + " " + DatabaseFunctions.numarComandariPreparat(u.Id,p.Id);
             HtmlGenericControl br = new HtmlGenericControl("br");
             show_content.Controls.Add(label);
             show_content.Controls.Add(br);

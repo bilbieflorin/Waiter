@@ -127,9 +127,19 @@ namespace db_mapping
 
             db_connection_potrivire.Open();
             SqlCommand fetch_potrivire = new SqlCommand(
-                    @"select id_preparat2
+                    @"select id_preparat1 
+                      from potrivire
+                      where id_preparat2 = @id_preparat
+                      union
+                      select id_preparat2 
                       from potrivire
                       where id_preparat1 = @id_preparat",
+                      /* @"select case
+                                when id_preparat1 = "+preparat.Id+" then id_preparat2 "+
+                                "when id_preparat2 = " + preparat.Id + " then id_preparat1 " + 
+                            " end "+
+                      " from potrivire",*/
+                      //where id_preparat1 = @id_preparat or id_preparat2 = @id_preparat" ,
                       db_connection_potrivire);
 
             fetch_potrivire.Parameters.Add(new SqlParameter("@id_preparat", preparat.Id));
@@ -617,20 +627,28 @@ namespace db_mapping
         {
             List<Preparat> preparate = new List<Preparat>();
             string lista_specifice="";
+            int i = 1;
             foreach (var specific in specifics)
             {
-                lista_specifice += "'" + specific + "',";
+                lista_specifice += "@specific"+i+",";
+                i++;
             }
+            lista_specifice = lista_specifice.Substring(0,lista_specifice.Length-1);
             SqlConnection connection = new SqlConnection(connection_string_);
             connection.Open();
             SqlCommand command = new SqlCommand(
                 @"select top "+k+" p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat, sum(cantitate) "+
                   "from preparate as p join preparate_comanda as pc on pc.id_preparat=p.id_preparat "+
                                       "join specific as s on p.id_specific = s.id_specific "+
-                  "where denumire_specific in (@lista_specifice) "+
+                  "where denumire_specific in ("+lista_specifice+")  and p.id_preparat not in (65,66)"+
                   "group by p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat " +
                   "order by sum(cantitate) desc", connection);
-            command.Parameters.Add(new SqlParameter("@lista_specifice", lista_specifice.Substring(0, lista_specifice.Length - 1)));
+            i = 1;
+            foreach (var specific in specifics)
+            {
+                command.Parameters.Add(new SqlParameter("@specific" + i, specific));
+                i++;
+            }
             SqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
@@ -662,6 +680,7 @@ namespace db_mapping
                 @"select top " + k + " p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat, sum(cantitate) " +
                   "from preparate as p join preparate_comanda as pc on pc.id_preparat=p.id_preparat " +
                                       "join specific as s on p.id_specific = s.id_specific " +
+                  "where p.id_preparat not in (65,66) "+
                   "group by p.id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat " +
                   "order by sum(cantitate) desc", connection);
             SqlDataReader reader = command.ExecuteReader();
@@ -694,7 +713,7 @@ namespace db_mapping
             SqlCommand command = new SqlCommand(
                 @"select id_preparat, denumire_preparat, pret, gramaj, denumire_specific, path, tip_preparat
                   from preparate join specific on preparate.id_specific = specific.id_specific
-                  where pret between 0.7*@pret_mediu and 1.3*@pret_mediu", connection);
+                  where pret <= 1.2*@pret_mediu and id_preparat not in (65,66)", connection);
             command.Parameters.Add(new SqlParameter("@pret_mediu",pret_mediu));
             SqlDataReader reader = command.ExecuteReader();
             while (reader.Read())

@@ -26,7 +26,7 @@ public partial class Recomandari : System.Web.UI.Page
             else
             {
                 Comanda comanda = Session["comanda"] as Comanda;
-                recomandari_ = RecFunctions.Gaseste_recomandari_Collective(user.Id, comanda, 4);
+                recomandari_ = RecFunctions.Recomandari(user.Id, comanda, 6);
                 Session["recomandari"] = recomandari_;
                 bindRecomandariListViewData();
             }

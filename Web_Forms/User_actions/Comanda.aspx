@@ -54,7 +54,7 @@
 
                     <div id="potriviriDiv" runat="server" visible="false">
                         <div class="text-center">
-                            <h4>Consideram ca comenzii dvs ii lipsesc urmatoarele</h4>
+                            <h4>Puteti completa comanda dumneavoastra cu</h4>
                         </div>
                         <div id="potriviriComandaCarousel" class="carousel slide" data-ride="carousel" style="width: 70%; height: 220px; margin: auto;">
                             <div class="carousel-inner" role="listbox">

@@ -4,8 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <h1 class="text-center">Recomandari</h1>
-    <h4 class="text-left">Alti utilizatori au preferat si: </h4>
-        <div>
+    <div>
         <asp:UpdatePanel ID="MeniuUpdatePanel" runat="server">
             <ContentTemplate>
                 <asp:ListView ID="RecomandariListView" runat="server" OnPagePropertiesChanging="recomandariListViewPagePropertiesChanging">
@@ -31,8 +30,8 @@
                                                     ImageUrl='<%# Eval("PathImagine") %>'
                                                     OnClick="recomandariListItemImagineClick"
                                                     CommandName="DisplayIndex"
-                                                    data-toggle="tooltip" 
-                                                    data-placement="top" 
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
                                                     title="Dati click pentru a comanda"
                                                     CommandArgument="<%# Container.DisplayIndex %>"
                                                     CssClass="img-thumbnail img-responsive img-md-sm-center-item img-xs-center-item"
@@ -58,15 +57,15 @@
                     </EmptyDataTemplate>
                 </asp:ListView>
                 <div class="row-fluid text-center" style="margin-bottom: 10px">
-                    <asp:DataPager ID="RecomandariDataPager" runat="server" PagedControlID="RecomandariListView" PageSize="1">
+                    <asp:DataPager ID="RecomandariDataPager" runat="server" PagedControlID="RecomandariListView" PageSize="6">
                         <Fields>
-                            <asp:NextPreviousPagerField PreviousPageText="Inapoi" 
-                                 ShowNextPageButton="false" ShowLastPageButton="false" ShowPreviousPageButton="true"
+                            <asp:NextPreviousPagerField PreviousPageText="Inapoi"
+                                ShowNextPageButton="false" ShowLastPageButton="false" ShowPreviousPageButton="false"
                                 ButtonCssClass="btn btn-primary" RenderNonBreakingSpacesBetweenControls="false" RenderDisabledButtonsAsLabels="false" />
-                            <asp:NumericPagerField ButtonType="Link" CurrentPageLabelCssClass="btn btn-primary active nbsp" RenderNonBreakingSpacesBetweenControls="false"
-                                NumericButtonCssClass="btn btn-default" ButtonCount="1" NextPageText="..." NextPreviousButtonCssClass="none" />
-                            <asp:NextPreviousPagerField NextPageText="Inainte" ShowNextPageButton="true"
-                                 ShowPreviousPageButton="false" ShowFirstPageButton="false"
+                            <%--<asp:NumericPagerField ButtonType="Link" CurrentPageLabelCssClass="btn btn-primary active nbsp" RenderNonBreakingSpacesBetweenControls="false"
+                                NumericButtonCssClass="btn btn-default" ButtonCount="1" NextPageText="..." NextPreviousButtonCssClass="none" />--%>
+                            <asp:NextPreviousPagerField NextPageText="Inainte" ShowNextPageButton="false"
+                                ShowPreviousPageButton="false" ShowFirstPageButton="false"
                                 ButtonCssClass="btn btn-primary" RenderNonBreakingSpacesBetweenControls="false" RenderDisabledButtonsAsLabels="false" />
                         </Fields>
                     </asp:DataPager>
@@ -76,7 +75,7 @@
     </div>
 
     <!-- Bootstrap Modal Dialog -->
-    <div class="modal fade" id="myModal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <asp:UpdatePanel ID="ModalUpdatePanel" runat="server" ChildrenAsTriggers="false" UpdateMode="Conditional">
                 <ContentTemplate>
