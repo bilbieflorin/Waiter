@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -167,6 +167,82 @@ namespace rec_system
             {
                 vecini[index] = results.MaxBy(x => x.Value).Key;
                 results.Remove(vecini[index]);
+            }
+
+            return vecini;
+
+        }
+		
+		 public static int[] Calculeaza_vecini_LSH(int k, int id_user)
+        {
+            // Extragem din DB un Dictionary de toate id utilizator, lista de preparate
+            // comandate.
+            Dictionary<int, List<int>> toatePrep = DatabaseFunctions.
+                preparateComandateDupaUtilizator();
+            Dictionary<int, HashSet<int>> signatures = new Dictionary<int, HashSet<int>>();
+            HashSet<int> single_signatures = new HashSet<int>();
+
+            foreach (KeyValuePair<int, List<int>> entry in toatePrep)
+            {
+                signatures.Add(entry.Key, entry.Value.ToHashSet<int>());
+                single_signatures.UnionWith(entry.Value);
+            }
+
+            int numSets = signatures.Count;
+            int numHashFunctions = single_signatures.Count;
+
+            MinHash<int> minHash = new MinHash<int>(numHashFunctions);
+            int[][] minHashValues = minHash.initializeHashBuckets(numSets,
+                numHashFunctions);
+
+            int index = 0, index_cautat = 0;
+            List<HashSet<int>> list_signatures = new List<HashSet<int>>();
+            foreach(var entry in signatures)
+            {
+                minHash.computeMinHashForSet(entry.Value, index, minHashValues,
+                    single_signatures);
+                if(entry.Key == id_user)
+                {
+                    index_cautat = index;
+                }
+                index++;
+                list_signatures.Add(entry.Value);
+            }
+
+            
+
+            LSH<int> lsh = new LSH<int>(minHashValues, list_signatures);
+            Dictionary<int, double> closeSimilarItems = lsh.closestSimilarItems(index_cautat, minHash);
+
+            int poz = 0;
+            int[] vecini = new int[k];
+            Dictionary<int, double> results = new Dictionary<int,double>();
+            int i = 0;
+
+            foreach(var closeItem in closeSimilarItems)
+            {
+                poz = closeItem.Key;
+                i = 0;
+                foreach (var entry in signatures)
+                {
+                    if (i == poz)
+                    {
+                        results.Add(entry.Key, closeItem.Value);
+                        break;
+                    }
+                    i++;
+
+                }
+
+            }
+            if (results.Count() > 0)
+            {
+                for (int ind = 0; ind < k; ind++)
+                {
+                    vecini[ind] = results.MaxBy(x => x.Value).Key;
+                    results.Remove(vecini[ind]);
+                    if (results.Count == 0) break;
+                }
             }
 
             return vecini;
