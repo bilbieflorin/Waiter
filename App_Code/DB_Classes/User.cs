@@ -78,6 +78,23 @@ namespace db_mapping
             get { return last_name_; }
         }
 
+        public String FullName
+        {
+            get 
+            {
+                String fullName = String.Empty;
+                if (! String.IsNullOrEmpty(first_name_))
+                    fullName += first_name_;
+                if (!String.IsNullOrEmpty(last_name_))
+                {
+                    if (!String.IsNullOrEmpty(fullName))
+                        fullName += " ";
+                    fullName += last_name_;
+                }
+                return String.IsNullOrEmpty(fullName) ? null : fullName;
+            }
+        }
+
         public String Password
         {
             get { return password_; }

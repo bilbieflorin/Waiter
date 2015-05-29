@@ -297,6 +297,54 @@ namespace db_mapping
             return id;
         }
 
+        public static List<String> getSpecifice()
+        {
+            List<String> lista_specifice = new List<String>();
+            SqlConnection db_connection_specifice = new SqlConnection(connection_string_);
+
+            db_connection_specifice.Open();
+            SqlCommand fetch_specifice = new SqlCommand(@"select denumire_specific
+                                                          from specific
+                                                          order by denumire_specific",
+                                                          db_connection_specifice);
+
+            SqlDataReader data_reader_specifice = fetch_specifice.ExecuteReader();
+
+            while (data_reader_specifice.Read())
+            {
+                string denumire = data_reader_specifice.GetString(0);
+                lista_specifice.Add(denumire);
+            }
+            data_reader_specifice.Close();
+            db_connection_specifice.Close();
+            return lista_specifice;
+        }
+
+        public static List<String> getSpecificsForUser(int id)
+        {
+            List<String> lista_specifice = new List<String>();
+            SqlConnection db_connection_specifice = new SqlConnection(connection_string_);
+
+            db_connection_specifice.Open();
+            SqlCommand fetch_specifice = new SqlCommand(@"select denumire_specific
+                                                          from prefera join specific on (prefera.id_specific = specific.id_specific)
+                                                          where id_user = @id
+                                                          order by denumire_specific",
+                                                          db_connection_specifice);
+            fetch_specifice.Parameters.Add(new SqlParameter("@id", id));
+
+            SqlDataReader data_reader_specifice = fetch_specifice.ExecuteReader();
+
+            while (data_reader_specifice.Read())
+            {
+                string denumire = data_reader_specifice.GetString(0);
+                lista_specifice.Add(denumire);
+            }
+            data_reader_specifice.Close();
+            db_connection_specifice.Close();
+            return lista_specifice;
+        }
+
         public static User checkEmailAndPasswordIfExists(String email, String password)
         {
             SqlConnection get_user_connection = new SqlConnection(connection_string_);

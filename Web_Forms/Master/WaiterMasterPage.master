@@ -42,6 +42,9 @@
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/Test/Test.aspx">Test</asp:HyperLink></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li id="ProfilHyperLink" runat="server">
+                            <asp:HyperLink ID="RealProfilHyperLink" runat="server">Conectat ca <span id="ProfilHyperLinkSpan" runat="server" style="color:black"></span></asp:HyperLink>
+                        </li>
                         <li id="ComandaHyperLink" runat="server">
                             <asp:HyperLink runat="server" NavigateUrl="../../Web_Forms/User_actions/Comanda.aspx">Comanda mea 
                                <asp:ScriptManager EnablePartialRendering="true" ID="BadgeScriptManager" runat="server"></asp:ScriptManager>

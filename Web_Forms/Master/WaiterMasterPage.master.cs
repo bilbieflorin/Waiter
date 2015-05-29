@@ -13,6 +13,9 @@ public partial class WaiterMasterPage : System.Web.UI.MasterPage
         User user = Session["user"] as User;
         if (user != null)
         {
+            ProfilHyperLinkSpan.InnerText = String.IsNullOrEmpty(user.FullName) ? "Anonim" : user.FullName;
+            RealProfilHyperLink.NavigateUrl = "../../Web_Forms/Profil/Profil.aspx";
+
             LogoutHyperLink.Visible = true;
 
             if (user.Type.Equals("ADMIN"))
@@ -20,6 +23,12 @@ public partial class WaiterMasterPage : System.Web.UI.MasterPage
                 AdminHyperLink.Visible = true;
             }
         }
+        else
+        {
+            ProfilHyperLinkSpan.InnerText = "Vizitator";
+            RealProfilHyperLink.NavigateUrl = "../../Web_Forms/User_actions/Login.aspx";
+        }
+
         Comanda comanda = Session["comanda"] as Comanda;
         Badge.Text = Convert.ToString( (comanda != null) ? comanda.NumarPreparate : 0);
         Page.ClientScript.RegisterStartupScript(Page.GetType(), "Data-toogle", 
