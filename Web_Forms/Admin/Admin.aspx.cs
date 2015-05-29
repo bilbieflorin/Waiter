@@ -59,6 +59,16 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
         IngredienteUpdatePanel.Update();
     }
 
+    protected void deleteIngredientButtonClick(object sender, EventArgs e)
+    {
+        LinkButton deleteIngredientLinkButton = sender as LinkButton;
+        int indexIngredient = Convert.ToInt32(deleteIngredientLinkButton.CommandArgument);
+        ingredienteAdaugate_.RemoveAt(indexIngredient);
+
+        IngredienteListView.DataBind();
+        IngredienteUpdatePanel.Update();
+    }
+
     protected void denumireValidate(object source, ServerValidateEventArgs args)
     {
         if (!args.Value.Equals(""))
@@ -77,6 +87,27 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
             span.Attributes["aria-hidden"] = "true";
             span.Attributes["id"] = "glyphicon";
             denumireFormGroup.Controls.Add(span);
+        }
+    }
+
+    protected void pozaValidate(object source, ServerValidateEventArgs args)
+    {
+        if (!args.Value.Equals(""))
+        {
+            args.IsValid = true;
+            pozaFormGroup.Attributes["class"] = "form-group";
+            pozaFormGroup.Controls.Remove(pozaFormGroup.FindControl("glyphicon"));
+        }
+        else
+        {
+            args.IsValid = false;
+            pozaFormGroup.Attributes["class"] = "form-group has-error has-feedback";
+            PozaPreparatFileUpload.Attributes["aria-describedby"] = "inputError2Status";
+            HtmlGenericControl span = new HtmlGenericControl("span");
+            span.Attributes["class"] = "glyphicon glyphicon-remove form-control-feedback";
+            span.Attributes["aria-hidden"] = "true";
+            span.Attributes["id"] = "glyphicon";
+            pozaFormGroup.Controls.Add(span);
         }
     }
 
@@ -136,7 +167,7 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
         {
             args.IsValid = false;
             gramajFormGroup.Attributes["class"] = "form-group has-error has-feedback";
-            TipPreparatTextBox.Attributes["aria-describedby"] = "inputError2Status";
+            GramajTextBox.Attributes["aria-describedby"] = "inputError2Status";
             HtmlGenericControl span = new HtmlGenericControl("span");
             span.Attributes["class"] = "glyphicon glyphicon-remove form-control-feedback";
             span.Attributes["aria-hidden"] = "true";
@@ -180,7 +211,7 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
         {
             args.IsValid = false;
             pretFormGroup.Attributes["class"] = "form-group has-error has-feedback";
-            TipPreparatTextBox.Attributes["aria-describedby"] = "inputError2Status";
+            PretTextBox.Attributes["aria-describedby"] = "inputError2Status";
             HtmlGenericControl span = new HtmlGenericControl("span");
             span.Attributes["class"] = "glyphicon glyphicon-remove form-control-feedback";
             span.Attributes["aria-hidden"] = "true";
@@ -207,8 +238,8 @@ public partial class Web_Forms_Admin_Admin : System.Web.UI.Page
         SpecificValidator.Validate();
         if (Page.IsValid && SpecificValidator.IsValid)
         {
-            String pathImagine = "../../Images/" + UploadPoza.FileName;
-            UploadPoza.SaveAs(Server.MapPath(pathImagine));
+            String pathImagine = "../../Images/" + PozaPreparatFileUpload.FileName;
+            PozaPreparatFileUpload.SaveAs(Server.MapPath(pathImagine));
 
             Preparat preparat = new Preparat();
             String denumire = DenumirePreparatTextBox.Text;

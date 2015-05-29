@@ -1,8 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Web_Forms/Master/WaiterMasterPage.master" AutoEventWireup="true" CodeFile="Admin.aspx.cs" Inherits="Web_Forms_Admin_Admin" %>
+﻿<%@ Page Title="" ClientIDMode="AutoID" Language="C#" MasterPageFile="~/Web_Forms/Master/WaiterMasterPage.master" AutoEventWireup="true" CodeFile="Admin.aspx.cs" Inherits="Web_Forms_Admin_Admin" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="panel-heading page-header text-center"><h1>Adaugare Preparat</h1></div>
     <div class="panel-body">
         <div id="denumireFormGroup" class="form-group" runat="server">
@@ -10,13 +10,11 @@
             <asp:TextBox runat="server" CssClass="form-control" ID="DenumirePreparatTextBox" placeholder="Introduceti denumirea preparatului" />
             <asp:CustomValidator ID="DenumireValidator" runat="server" ErrorMessage="Trebuie introdusa o denumire!" ForeColor="Red" Display="Dynamic" ControlToValidate="DenumirePreparatTextBox" OnServerValidate="denumireValidate" ValidateEmptyText="true"></asp:CustomValidator>
         </div>
-        <div class="form-group" runat="server">
+        <div id="pozaFormGroup" class="form-group" runat="server">
             <label class="control-label" for="UploadPoza">Poza preparat</label>
-            <div>
-                <asp:FileUpload ID="UploadPoza" CssClass="form-control" runat="server" Height="39px" Width="309px"/>
-                <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="UploadPoza" ErrorMessage="Trebuie sa introduci o poza!" ForeColor="Red" Display="Dynamic"></asp:RequiredFieldValidator>--%>
-                <%--<asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Numai jpg/jpeg/png/bmp file is allowed!" ValidationExpression="^.+(.jpg|.jpeg|.png|.bmp)$" ControlToValidate="UploadPoza" Display="Dynamic" ForeColor="Red"> </asp:RegularExpressionValidator>--%>
-            </div>
+            <asp:FileUpload ID="PozaPreparatFileUpload" CssClass="form-control" runat="server" />
+            <asp:CustomValidator ID="PozaValidator" runat="server" ErrorMessage="Trebuie introdusa o poza!" ForeColor="Red" Display="Dynamic" ControlToValidate="PozaPreparatFileUpload" OnServerValidate="pozaValidate" ValidateEmptyText="true"></asp:CustomValidator>
+            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ErrorMessage="Numai fisierele jpg/jpeg/png/bmp sunt permise!" ValidationExpression="^.+(.jpg|.jpeg|.png|.bmp)$" ControlToValidate="PozaPreparatFileUpload" Display="Dynamic" ForeColor="Red"> </asp:RegularExpressionValidator>
         </div>
          <div id="tipFormGroup" class="form-group" runat="server">
             <label class="control-label" for="TipPreparatTextBox">Tip preparat</label>
@@ -35,7 +33,7 @@
         </div>
         <div class="form-group" runat="server">
             <label class="control-label">Ingrediente</label>
-            <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="IngredienteUpdatePanel">
+            <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="IngredienteUpdatePanel" >
                 <ContentTemplate>
                     <ul class="list-group">
                         <asp:ListView runat="server" ID="IngredienteListView">
@@ -44,6 +42,13 @@
                             </LayoutTemplate>
                             <ItemTemplate>
                                 <li class="list-group-item">
+                                    <asp:LinkButton runat="server"
+                                        CssClass="pull-right"
+                                        OnClick="deleteIngredientButtonClick"
+                                        ID="deleteIngredientButton"
+                                        CommandArgument='<%# Container.DataItemIndex %>'>
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </asp:LinkButton>
                                     <asp:Label runat="server" Text='<%# Eval("denumire") %>' />
                                 </li>
                             </ItemTemplate>
