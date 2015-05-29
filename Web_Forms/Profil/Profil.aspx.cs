@@ -26,7 +26,11 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
             ConfirmPasswordTextBox.Text = "";
         }
 
-        if (!IsPostBack)
+        if (IsPostBack)
+        {
+            // ConfirmPasswordTextBox.Attributes.Add("value", ConfirmPasswordTextBox.Text);
+        }
+        else
         {
             specifice_ = DatabaseFunctions.getSpecifice();
             SpecificCheckBoxList.DataSource = specifice_;
@@ -43,42 +47,42 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
                     user.Type,
                     DatabaseFunctions.getSpecificsForUser(user.Id)
                     );
-            specificeAlese_ = user.SpecificsList;
 
-            foreach (String specific in user.SpecificsList)
-            {
-                foreach (ListItem specificItem in SpecificCheckBoxList.Items)
+            if (user.SpecificsList != null)
+                foreach (String specific in user.SpecificsList)
                 {
-                    if (specificItem.Text.Equals(specific))
+                    foreach (ListItem specificItem in SpecificCheckBoxList.Items)
                     {
-                        specificItem.Selected = true;
-                        break;
+                        if (specificItem.Text.Equals(specific))
+                        {
+                            specificItem.Selected = true;
+                            break;
+                        }
                     }
                 }
-            }
         }
     }
 
     protected void confirmPasswordServerValidate(object source, ServerValidateEventArgs args)
     {
         User user = Session["user"] as User;
-
+        
         if (args.Value.Length > 3 && args.Value.Length < 21 && sha256(args.Value).Equals(user.Password))
         {
             args.IsValid = true;
-            passwordFormGroup.Attributes["class"] = "form-group";
-            passwordFormGroup.Controls.Remove(passwordFormGroup.FindControl("glyphicon"));
+            confirmPasswordFormGroup.Attributes["class"] = "form-group";
+            confirmPasswordFormGroup.Controls.Remove(confirmPasswordFormGroup.FindControl("glyphicon"));
         }
         else
         {
             args.IsValid = false;
-            passwordFormGroup.Attributes["class"] = "form-group has-error has-feedback";
+            confirmPasswordFormGroup.Attributes["class"] = "form-group has-error has-feedback";
             ConfirmPasswordTextBox.Attributes["aria-describedby"] = "inputError2Status";
             HtmlGenericControl span = new HtmlGenericControl("span");
             span.Attributes["class"] = "glyphicon glyphicon-remove form-control-feedback";
             span.Attributes["aria-hidden"] = "true";
             span.Attributes["id"] = "glyphicon";
-            passwordFormGroup.Controls.Add(span);
+            confirmPasswordFormGroup.Controls.Add(span);
         }
     }
 
@@ -87,7 +91,30 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
         Page.Validate();
         if (Page.IsValid)
         {
-            // TODO: Update user info
+            User user = Session["user"] as User;
+
+            string first_name = (String.IsNullOrEmpty(FirstNameTextBox.Text)) ? null : FirstNameTextBox.Text;
+            string last_name = (String.IsNullOrEmpty(LastNameTextBox.Text)) ? null : LastNameTextBox.Text;
+            List<string> specifics_list = new List<string>();
+            foreach (ListItem specific in SpecificCheckBoxList.Items)
+                if (specific.Selected == true)
+                    specifics_list.Add(specific.Text);
+            if (specifics_list.Count == 0)
+                specifics_list = null;
+            if (!first_name.Equals(user.FirstName) || !last_name.Equals(user.LastName) || (specifics_list != null ? specifics_list.Count : 0) != (user.SpecificsList != null ? user.SpecificsList.Count : 0))
+            {
+                user.Initialize(
+                    user.Id,
+                    user.Email,
+                    user.Password,
+                    first_name,
+                    last_name,
+                    user.JoinDate,
+                    user.Type,
+                    specifics_list
+                    );
+                DatabaseFunctions.updateUser(user);
+            }
         }
     }
 
@@ -104,5 +131,5 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
     }
 
     private static List<String> specifice_;
-    private static List<String> specificeAlese_;
+
 }

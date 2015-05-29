@@ -17,7 +17,7 @@
             <label class="control-label" for="FirstNameTextBox">Prenume</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="FirstNameTextBox"/>
         </div>
-        <div class="form-group" id="passwordFormGroup" runat="server">
+        <div class="form-group" id="confirmPasswordFormGroup" runat="server">
             <label class="control-label" for="ConfirmPasswordTextBox">Confirmare parola</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="ConfirmPasswordTextBox" TextMode="Password"/>
             <asp:CustomValidator ID="ConfirmPassword" runat="server" ErrorMessage="Parola nu corespunde!" ForeColor="Red" Display="Dynamic" ControlToValidate="ConfirmPasswordTextBox" OnServerValidate="confirmPasswordServerValidate" ValidateEmptyText="true"></asp:CustomValidator>
