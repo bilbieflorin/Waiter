@@ -52,7 +52,7 @@
                         </asp:ListView>
                     </ul>
 
-                    <div id="potriviriComandaCarousel" class="carousel slide" data-ride="carousel" style="width: 70%; height: 220px; margin: auto;">
+                    <div id="potriviriComandaCarousel" runat="server" class="carousel slide" data-ride="carousel" style="width: 70%; height: 220px; margin: auto;" visible="false">
                         <div class="carousel-inner" role="listbox">
                             <asp:Repeater ID="carouselRepeater" runat="server">
                                 <ItemTemplate>
@@ -60,8 +60,8 @@
                                         <asp:LinkButton runat="server"
                                             ID="carouselItemLinkButton"
                                             OnClick="carouselItemImageClick"
-                                            CommandName="ItemIndex"
-                                            CommandArgument="<%# Container.ItemIndex %>">
+                                            CommandName="Id"
+                                            CommandArgument='<%# Eval("Id") %>'>
                                             <img
                                             alt="ImaginePreparat"
                                             src='<%# Eval("PathImagine") %>'

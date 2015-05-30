@@ -77,6 +77,78 @@ namespace db_mapping
             return lista_preparate;
         }
 
+        public static Preparat getPreparat(int id_preparat)
+        {
+            Preparat preparat = null;
+            SqlConnection db_connection_preparate = new SqlConnection(connection_string_);
+
+            db_connection_preparate.Open();
+            SqlCommand fetch_preparat = new SqlCommand(
+                    @"select denumire_preparat, tip_preparat, path, gramaj, pret, denumire_specific
+                      from preparate join specific on (
+                      preparate.id_specific = specific.id_specific)
+                      where id_preparat = @id_preparat",
+                      db_connection_preparate);
+
+            fetch_preparat.Parameters.Add(new SqlParameter("@id_preparat", id_preparat));
+
+            SqlDataReader data_reader_preparat = fetch_preparat.ExecuteReader();
+
+            if (data_reader_preparat.Read())
+            {
+                string denumire = data_reader_preparat.GetString(0);
+                string tip = data_reader_preparat.GetString(1);
+                string path = null;
+                if (!data_reader_preparat.IsDBNull(2))
+                {
+                    path = data_reader_preparat.GetString(2);
+                }
+                double gramaj = data_reader_preparat.GetDouble(3);
+                double pret = data_reader_preparat.GetDouble(4);
+                string specific = null;
+                if (!data_reader_preparat.IsDBNull(5))
+                {
+                    specific = data_reader_preparat.GetString(5);
+                }
+
+                preparat = new Preparat();
+                preparat.Initialize(id_preparat, denumire, tip, pret, path, gramaj, specific,
+                    ingredientePreparat(id_preparat));
+            }
+            data_reader_preparat.Close();
+            db_connection_preparate.Close();
+            return preparat;
+        }
+
+        public static List<Preparat> getPotriviriPreparat(Preparat preparat)
+        {
+            List<Preparat> lista_preparate = new List<Preparat>();
+            SqlConnection db_connection_potrivire = new SqlConnection(connection_string_);
+
+            db_connection_potrivire.Open();
+            SqlCommand fetch_potrivire = new SqlCommand(
+                    @"select id_preparat2
+                      from potrivire
+                      where id_preparat1 = @id_preparat",
+                      db_connection_potrivire);
+
+            fetch_potrivire.Parameters.Add(new SqlParameter("@id_preparat", preparat.Id));
+
+            SqlDataReader data_reader_potrivire = fetch_potrivire.ExecuteReader();
+
+            while (data_reader_potrivire.Read())
+            {
+                int id_preparat_potrivit = data_reader_potrivire.GetInt32(0);
+
+                Preparat preparat_potrivit = getPreparat(id_preparat_potrivit);
+                if (preparat_potrivit != null)
+                    lista_preparate.Add(preparat_potrivit);
+            }
+            data_reader_potrivire.Close();
+            db_connection_potrivire.Close();
+            return lista_preparate;
+        }
+
         /// <summary>
         /// Intoarce lista de ingrediente din baza de date
         /// </summary>

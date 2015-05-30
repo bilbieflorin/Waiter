@@ -26,9 +26,40 @@ public partial class ComandaWebPage : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            meniu_ = DatabaseFunctions.getPreparate();
-            carouselRepeater.DataSource = meniu_;
-            carouselRepeater.DataBind();
+            potriviri_ = new Hashtable();
+
+            Comanda comanda = Session["comanda"] as Comanda;
+            if (comanda != null)
+            {
+                potriviriComandaCarousel.Visible = true;
+
+                List<Preparat> preparate = comanda.ListaItem.Values.Cast<ItemComanda>().Select(itemComanda => itemComanda.Preparat).ToList();
+               
+                IEnumerator<Preparat> enumeratorPreparate = preparate.GetEnumerator();
+                
+                foreach (Preparat preparat in preparate)
+                {
+                    List<Preparat> potriviri = DatabaseFunctions.getPotriviriPreparat(preparat);
+                    foreach (Preparat potrivire in potriviri)
+                    {
+                        bool potrivire_valida = true;
+
+                        enumeratorPreparate.Reset();
+                        while (potrivire_valida && enumeratorPreparate.MoveNext())
+                        {
+                            if (enumeratorPreparate.Current.Tip.Equals(potrivire.Tip))
+                                potrivire_valida = false;
+                        }
+
+                        if (potrivire_valida && !potriviri_.ContainsKey(potrivire.Id))
+                            potriviri_.Add(potrivire.Id, potrivire);
+                    }
+                    
+                }
+
+                carouselRepeater.DataSource = potriviri_.Values;
+                carouselRepeater.DataBind();
+            }
         }
     }
 
@@ -77,11 +108,11 @@ public partial class ComandaWebPage : System.Web.UI.Page
     {
         LinkButton target_image = sender as LinkButton;
 
-        if (target_image.CommandName.Equals("ItemIndex"))
+        if (target_image.CommandName.Equals("Id"))
         {
-            int image_index = Convert.ToInt32(target_image.CommandArgument);
+            int id_preparat = Convert.ToInt32(target_image.CommandArgument);
 
-            Preparat preparat = meniu_[image_index];
+            Preparat preparat = potriviri_[id_preparat] as Preparat;
 
             ModalItemTitle.Text = preparat.Denumire;
             ModalItemImage.ImageUrl = preparat.PathImagine;
@@ -101,7 +132,7 @@ public partial class ComandaWebPage : System.Web.UI.Page
             ModalItemBody.InnerHtml = "Specific: " + preparat.Specific + "<br />" + "Tip: " + preparat.Tip + "<br />" + "Gramaj: " + preparat.Gramaj + "<br />" + "Pret: " + preparat.Pret
                 + "<br />Ingrediente: " + ingrediente;
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
-            ButtonComanda.CommandArgument = image_index + "";
+            ButtonComanda.CommandArgument = id_preparat + "";
             ModalUpdatePanel.Update();
         }
     }
@@ -127,8 +158,8 @@ public partial class ComandaWebPage : System.Web.UI.Page
                 comanda.Data = DateTime.Now;
             }
             Button order_button = sender as Button;
-            int index_meniu = Convert.ToInt32(order_button.CommandArgument);
-            ItemComanda item = new ItemComanda(meniu_[index_meniu], 1);
+            int id_preparat = Convert.ToInt32(order_button.CommandArgument);
+            ItemComanda item = new ItemComanda(potriviri_[id_preparat] as Preparat, 1);
             comanda.addItemComanda(item);
             Session["comanda"] = comanda;
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal('hide')", true);
@@ -198,5 +229,5 @@ public partial class ComandaWebPage : System.Web.UI.Page
         }
     }
 
-    private static List<Preparat> meniu_;
+    private static Hashtable potriviri_;
 }
