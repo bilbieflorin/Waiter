@@ -190,3 +190,20 @@ nav.navbar.affix {
   
   border-radius: 15px;
 }
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+      width: 70%;
+      margin: auto;
+}
+
+.carousel-inner > .item > div,
+.carousel-inner > .item > a > div {
+    margin: auto;
+}
+
+.carousel-control.left, 
+.carousel-control.right {
+   background-image:none !important;
+   filter:none !important;
+}

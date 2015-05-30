@@ -157,8 +157,14 @@ namespace db_mapping
                                               set first_name = @first_name, last_name = @last_name 
                                               where id_user = @id_user",
                                               update_user_connection);
-            update_user_command.Parameters.Add(new SqlParameter("@first_name", user.FirstName));
-            update_user_command.Parameters.Add(new SqlParameter("@last_name", user.LastName));
+            if (user.FirstName == null)
+                update_user_command.Parameters.Add(new SqlParameter("@first_name", (object)DBNull.Value));
+            else
+                update_user_command.Parameters.Add(new SqlParameter("@first_name", user.FirstName));
+            if (user.LastName == null)
+                update_user_command.Parameters.Add(new SqlParameter("@last_name", (object)DBNull.Value));
+            else
+                update_user_command.Parameters.Add(new SqlParameter("@last_name", user.LastName));
             update_user_command.Parameters.Add(new SqlParameter("@id_user", user.Id));
             update_user_command.ExecuteNonQuery();
             update_user_connection.Close();

@@ -24,8 +24,12 @@
         </div>
         <div class="form-group">
             <label class="control-label">Specific preferat</label>
-            <asp:CheckBoxList runat="server" ID="SpecificCheckBoxList">
-            </asp:CheckBoxList>
+            <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="SpecificeUpdatePanel">
+                <ContentTemplate>
+                    <asp:CheckBoxList runat="server" ID="SpecificCheckBoxList" OnSelectedIndexChanged="SpecificCheckBoxList_SelectedIndexChanged" AutoPostBack="true">
+                    </asp:CheckBoxList>
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </div>
         <asp:Button ID="UpdateButton" CssClass="btn btn-primary" OnClick="updateButtonClick" runat="server" Text="Updateaza"></asp:Button>
     </div>

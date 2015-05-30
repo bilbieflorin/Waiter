@@ -41,19 +41,19 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
                         user.Type,
                         DatabaseFunctions.getSpecificsForUser(user.Id)
                         );
-                specificeAlese_ = user.SpecificsList;
 
-                foreach (String specific in user.SpecificsList)
-                {
-                    foreach (ListItem specificItem in SpecificCheckBoxList.Items)
+                if (user.SpecificsList != null)
+                    foreach (String specific in user.SpecificsList)
                     {
-                        if (specificItem.Text.Equals(specific))
+                        foreach (ListItem specificItem in SpecificCheckBoxList.Items)
                         {
-                            specificItem.Selected = true;
-                            break;
+                            if (specificItem.Text.Equals(specific))
+                            {
+                                specificItem.Selected = true;
+                                break;
+                            }
                         }
                     }
-                }
             }
         }
     }
@@ -81,6 +81,11 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
         }
     }
 
+    protected void SpecificCheckBoxList_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        registeredChanges_ = true;
+    }
+
     protected void updateButtonClick(object sender, EventArgs e)
     {
         Page.Validate();
@@ -89,18 +94,16 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
             User user = Session["user"] as User;
             string first_name = (String.IsNullOrEmpty(FirstNameTextBox.Text)) ? null : FirstNameTextBox.Text;
             string last_name = (String.IsNullOrEmpty(LastNameTextBox.Text)) ? null : LastNameTextBox.Text;
-            List<string> specifics_list = new List<string>();
-            foreach (ListItem specific in SpecificCheckBoxList.Items)
-                if (specific.Selected == true)
-                    specifics_list.Add(specific.Text);
-            if (specifics_list.Count == 0)
-                specifics_list = null;
-            if (
-                !first_name.Equals(user.FirstName) ||
-                !last_name.Equals(user.LastName) ||
-                (specifics_list != null ? specifics_list.Count : 0) 
-                != (user.SpecificsList != null ? user.SpecificsList.Count : 0))
+            List<string> specifics_list;
+            if (registeredChanges_)
             {
+                specifics_list = new List<string>();
+                foreach (ListItem specific in SpecificCheckBoxList.Items)
+                    if (specific.Selected == true)
+                        specifics_list.Add(specific.Text);
+                if (specifics_list.Count == 0)
+                    specifics_list = null;
+
                 user.Initialize(
                     user.Id,
                     user.Email,
@@ -112,8 +115,30 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
                     specifics_list
                     );
                 DatabaseFunctions.updateUser(user);
-                Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
             }
+            else
+            {
+                specifics_list = user.SpecificsList;
+
+                if (((first_name != null) != (user.FirstName != null))
+                    || (first_name != null && !first_name.Equals(user.FirstName))
+                    || ((last_name != null) != (user.LastName != null))
+                    || (last_name != null && !last_name.Equals(user.LastName)))
+                {
+                    user.Initialize(
+                        user.Id,
+                        user.Email,
+                        user.Password,
+                        first_name,
+                        last_name,
+                        user.JoinDate,
+                        user.Type,
+                        specifics_list
+                    );
+                    DatabaseFunctions.updateUser(user);
+                }
+            }
+            Response.Redirect("../../Web_Forms/Master/Waiter.aspx");
         }
     }
 
@@ -130,5 +155,5 @@ public partial class Web_Forms_Profil_Profil : System.Web.UI.Page
     }
 
     private static List<String> specifice_;
-    private static List<String> specificeAlese_;
+    private static bool registeredChanges_;
 }
