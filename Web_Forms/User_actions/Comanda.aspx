@@ -52,16 +52,20 @@
                         </asp:ListView>
                     </ul>
 
-                    <div id="potriviriComandaCarousel" runat="server" class="carousel slide" data-ride="carousel" style="width: 70%; height: 220px; margin: auto;" visible="false">
-                        <div class="carousel-inner" role="listbox">
-                            <asp:Repeater ID="carouselRepeater" runat="server">
-                                <ItemTemplate>
-                                    <div class="item <%# Container.ItemIndex == 0 ? "active" : "" %>">
-                                        <asp:LinkButton runat="server"
-                                            ID="carouselItemLinkButton"
-                                            OnClick="carouselItemImageClick"
-                                            CommandName="Id"
-                                            CommandArgument='<%# Eval("Id") %>'>
+                    <div id="potriviriDiv" runat="server" visible="false">
+                        <div class="text-center">
+                            <h4>Consideram ca comenzii dvs ii lipsesc urmatoarele</h4>
+                        </div>
+                        <div id="potriviriComandaCarousel" class="carousel slide" data-ride="carousel" style="width: 70%; height: 220px; margin: auto;">
+                            <div class="carousel-inner" role="listbox">
+                                <asp:Repeater ID="carouselRepeater" runat="server">
+                                    <ItemTemplate>
+                                        <div class="item <%# Container.ItemIndex == 0 ? "active" : "" %>">
+                                            <asp:LinkButton runat="server"
+                                                ID="carouselItemLinkButton"
+                                                OnClick="carouselItemImageClick"
+                                                CommandName="Id"
+                                                CommandArgument='<%# Eval("Id") %>'>
                                             <img
                                             alt="ImaginePreparat"
                                             src='<%# Eval("PathImagine") %>'
@@ -70,20 +74,21 @@
                                         <div class="carousel-caption" style="max-width: 275px">
                                             <h3><%# Eval("Denumire") %></h3>
                                         </div>
-                                        </asp:LinkButton>
+                                            </asp:LinkButton>
 
-                                    </div>
-                                </ItemTemplate>
-                            </asp:Repeater>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </div>
+                            <a class="left carousel-control" href="#potriviriComandaCarousel" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <%--<span class="sr-only">Previous</span>--%>
+                            </a>
+                            <a class="right carousel-control" href="#potriviriComandaCarousel" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <%--<span class="sr-only">Next</span>--%>
+                            </a>
                         </div>
-                        <a class="left carousel-control" href="#potriviriComandaCarousel" role="button" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                            <%--<span class="sr-only">Previous</span>--%>
-                        </a>
-                        <a class="right carousel-control" href="#potriviriComandaCarousel" role="button" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                            <%--<span class="sr-only">Next</span>--%>
-                        </a>
                     </div>
 
                     <div class="pull-right text-center" id="Total" runat="server" visible="false" style="font-weight: bold"></div>
